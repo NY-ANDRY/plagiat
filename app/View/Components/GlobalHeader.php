@@ -12,8 +12,6 @@ class GlobalHeader extends Component
      */
     public function render(): View
     {
-        return view('layouts.header', [
-            'ya_man' => 'yeah'
-        ]);
+        return view('layouts.header');
     }
 }

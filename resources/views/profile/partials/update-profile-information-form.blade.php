@@ -13,9 +13,47 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
+
+        <div x-data="{ photoPreview: null }">
+            <x-input-label for="url_image" :value="__('Profile Photo')" />
+            
+            <div class="flex items-center gap-6 mt-2">
+                <!-- Current Avatar / Preview -->
+                <div class="avatar">
+                    <div class="mask mask-squircle w-24 h-24 bg-gray-100">
+                        <template x-if="!photoPreview">
+                            <img src="{{ $user->url_image ? asset('storage/' . $user->url_image) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) }}" alt="{{ $user->name }}" />
+                        </template>
+                        <template x-if="photoPreview">
+                            <img :src="photoPreview" alt="Preview" />
+                        </template>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <input 
+                        id="url_image" 
+                        name="url_image" 
+                        type="file" 
+                        class="file-input file-input-bordered file-input-primary w-full max-w-xs" 
+                        accept="image/*"
+                        @change="
+                            const file = $event.target.files[0];
+                            if (file) {
+                                const reader = new FileReader();
+                                reader.onload = (e) => { photoPreview = e.target.result; };
+                                reader.readAsDataURL(file);
+                            }
+                        "
+                    />
+                    <p class="text-xs text-gray-500">{{ __('PNG, JPG, JPEG or WEBP (Max 2MB)') }}</p>
+                    <x-input-error class="mt-2" :messages="$errors->get('url_image')" />
+                </div>
+            </div>
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
