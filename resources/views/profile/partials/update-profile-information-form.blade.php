@@ -25,7 +25,7 @@
                 <div class="avatar">
                     <div class="mask mask-squircle w-24 h-24 bg-gray-100">
                         <template x-if="!photoPreview">
-                            <img src="{{ $user->url_image ? asset('storage/' . $user->url_image) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) }}" alt="{{ $user->name }}" />
+                            <img src="{{ $user->imageUrl() }}" alt="{{ $user->name }}" />
                         </template>
                         <template x-if="photoPreview">
                             <img :src="photoPreview" alt="Preview" />

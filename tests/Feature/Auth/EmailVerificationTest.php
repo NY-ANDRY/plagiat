@@ -19,7 +19,6 @@ class EmailVerificationTest extends TestCase
 
         $response = $this->actingAs($user)->get('/auth/verify-email');
 
-
         $response->assertStatus(200);
     }
 

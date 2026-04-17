@@ -5,13 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class RoleUser extends Pivot
+class ExamFileExtension extends Pivot
 {
     use SoftDeletes;
 
-    protected $table = 'role_user';
-
-    protected $dates = ['deleted_at'];
+    protected $table = 'exam_file_extension';
 
     public $incrementing = true;
 }

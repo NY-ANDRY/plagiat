@@ -15,8 +15,8 @@ class ProfLayout extends Component
         return view('layouts.prof', [
             'nav' => [
                 ['label' => 'dashboard', 'url' => '/prof/dashboard'],
-                ['label' => 'exam', 'url' => '/prof/exam']
-            ]
+                ['label' => 'exam', 'url' => '/prof/exam'],
+            ],
         ]);
     }
 }
