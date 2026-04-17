@@ -21,4 +21,7 @@ Route::middleware('auth')->group(function () {
         ->name('admin.dashboard');
 });
 
-require __DIR__.'/auth.php';
+Route::prefix('auth')->group(function () {
+    require __DIR__.'/auth.php';
+});
+
