@@ -1,3 +1,3 @@
 <x-prof-layout>
-    dashboard
+    exam
 </x-prof-layout>

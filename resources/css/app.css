@@ -4,3 +4,8 @@
 @source "../**/*.blade.php";
 @source "../**/*.js";
 @source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
+
+
+button {
+    @apply cursor-pointer;
+}
