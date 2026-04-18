@@ -8,7 +8,6 @@
             </ul>
         </div>
     </div>
-
     <div class="flex h-full">
         <div class="dropdown dropdown-end h-full">
             <div tabindex="0"

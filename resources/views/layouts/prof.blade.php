@@ -21,6 +21,7 @@
                 @foreach ($nav as $item)
                     <a href="{{ $item['url'] }}"
                         class="flex items-center px-6 py-3 text-sm hover:bg-gray-100 transition-all text-neutral-600 capitalize">
+                        <x-dynamic-component :component="'lucide-' . $item['icon']" class="w-4 h-4 mr-3 text-gray-500" />
                         <span class="text-gray-700">{{ $item['label'] }}</span>
                     </a>
                 @endforeach
