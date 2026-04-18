@@ -75,7 +75,7 @@ class Exam extends Model
         return $result;
     }
 
-    public static function Details($id)
+    public static function details($id)
     {
         return Exam::with([
             'creator',

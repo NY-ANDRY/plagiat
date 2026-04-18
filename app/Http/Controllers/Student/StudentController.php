@@ -24,7 +24,7 @@ class StudentController extends Controller
 
     public function exam($id): View
     {
-        $exam = Exam::Details($id);
+        $exam = Exam::details($id);
         return view('student.exam', compact('exam'));
     }
 

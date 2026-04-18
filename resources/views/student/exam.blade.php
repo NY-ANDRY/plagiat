@@ -54,12 +54,17 @@
             </div>
             <div class="box flex flex-col gap-5">
                 @foreach ($exam->submissions as $submission)
-                    <div class="flex items-center gap-2">
-                        <img src="{{ $submission->student->imageUrl() }}" class="w-8 mask mask-squircle" alt="">
+                    <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <span class="text-sm font-medium text-neutral-800">
-                                {{ $submission->student->name }}
-                            </span>
+                            <img src="{{ $submission->student->imageUrl() }}" class="w-8 mask mask-squircle" alt="">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-medium text-neutral-800">
+                                    {{ $submission->student->name }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex text-sm text-neutral-500">
+                            {{ $submission->created_at->format('H:i d-m-Y') }}
                         </div>
                     </div>
                 @endforeach

@@ -47,5 +47,20 @@ h3 {
 }
 
 .ss-v {
-    @apply h-full max-h-full overflow-hidden overflow-y-hidden;
+    @apply h-full max-h-full overflow-hidden overflow-y-auto;
+}
+
+/* Chrome, Edge, Safari */
+/* ::-webkit-scrollbar {
+  display: none;
+} */
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* IE et anciens Edge */
+* {
+  -ms-overflow-style: none;
 }
