@@ -20,8 +20,8 @@
             <div class="flex flex-col gap-0 flex-1">
                 @foreach ($nav as $item)
                     <a href="{{ $item['url'] }}"
-                        class="flex items-center px-6 py-3 text-sm hover:bg-gray-100 transition-all text-neutral-600 capitalize">
-                        <x-dynamic-component :component="'lucide-' . $item['icon']" class="w-4 h-4 mr-3 text-gray-500" />
+                        class="flex items-center px-6 py-3 text-sm activable text-neutral-600 capitalize">
+                        <x-dynamic-component :component="'lucide-' . $item['icon']" class="w-4 h-4 mr-3" />
                         <span class="text-gray-700">{{ $item['label'] }}</span>
                     </a>
                 @endforeach
@@ -30,7 +30,7 @@
                 <form action="{{ route('logout') }}" method="post">
                     @csrf
                     <button type="submit"
-                        class="flex items-center px-6 py-3 text-sm hover:bg-gray-100 transition-all text-neutral-600 capitalize w-full text-left">
+                        class="flex items-center px-6 py-3 text-sm activable capitalize w-full text-left">
                         <span class="text-gray-700">Logout</span>
                     </button>
                 </form>
@@ -40,7 +40,7 @@
         <div class="flex flex-col flex-1">
             <x-global-header />
 
-            <main>
+            <main class="flex-1 flex flex-col">
                 {{ $slot }}
             </main>
         </div>

@@ -12,10 +12,26 @@ class FileExtensionSeeder extends Seeder
      */
     public function run(): void
     {
-        $extensions = ['.php', '.html', '.css'];
-
-        foreach ($extensions as $extension) {
-            FileExtension::updateOrCreate(['name' => $extension]);
-        }
+        FileExtension::updateOrCreate(
+            [
+                'name' => 'html',
+                'extension' => '.html',
+                'url_icon' => 'ext/html.svg',
+            ]
+        );
+        FileExtension::updateOrCreate(
+            [
+                'name' => 'css',
+                'extension' => '.css',
+                'url_icon' => 'ext/css.svg',
+            ]
+        );
+        FileExtension::updateOrCreate(
+            [
+                'name' => 'php',
+                'extension' => '.php',
+                'url_icon' => 'ext/php.svg',
+            ]
+        );
     }
 }

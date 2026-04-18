@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('file_extensions', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->string('extension')->unique();
+            $table->string('url_icon')->unique();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -21,6 +23,7 @@ return new class extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->text('about');
             $table->date('close_date');
             $table->foreignId('creator_id')->constrained('users')->cascadeOnDelete();
             $table->softDeletes();

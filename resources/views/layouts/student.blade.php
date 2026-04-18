@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 
 <head>
     <meta charset="utf-8">
@@ -8,30 +8,42 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen max-h-screen overflow-hidden flex">
+        <div class="flex flex-col w-64 gap-2 border-r border-neutral-200">
+            <div class="flex items-center px-6 h-16">
+                <span class="text-xl font-bold">{{ config('app.name', 'Plagiat') }}</span>
+            </div>
+            <div class="flex flex-col gap-0 flex-1">
+                @foreach ($nav as $item)
+                    <a href="{{ $item['url'] }}"
+                        class="flex items-center px-6 py-3 text-sm activable text-neutral-600 capitalize">
+                        <x-dynamic-component :component="'lucide-' . $item['icon']" class="w-4 h-4 mr-3" />
+                        <span class="text-gray-700">{{ $item['label'] }}</span>
+                    </a>
+                @endforeach
+            </div>
+            <div class="flex flex-col">
+                <form action="{{ route('logout') }}" method="post">
+                    @csrf
+                    <button type="submit"
+                        class="flex items-center px-6 py-3 text-sm activable text-neutral-600 capitalize w-full text-left">
+                        <span class="text-gray-700">Logout</span>
+                    </button>
+                </form>
+            </div>
+        </div>
 
-        <!-- Page Heading -->
-        @isset($header)
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset
+        <div class="flex flex-col flex-1 max-h-full overflow-hidden">
+            <x-global-header />
 
-        <!-- Page Content -->
-        <main>
-            {{ $slot }}
-        </main>
+            <main class="flex-1 flex flex-col overflow-hidden overflow-y-auto">
+                {{ $slot }}
+            </main>
+        </div>
     </div>
 </body>
 

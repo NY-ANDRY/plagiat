@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['name'])]
+#[Fillable(['name', 'extension', 'url_icon'])]
 class FileExtension extends Model
 {
     /** @use HasFactory<FileExtensionFactory> */
@@ -21,5 +21,12 @@ class FileExtension extends Model
             ->using(ExamFileExtension::class)
             ->withTimestamps()
             ->wherePivotNull('deleted_at');
+    }
+
+    public function iconUrl(): string
+    {
+        return $this->url_icon
+            ? asset('storage/' . $this->url_icon)
+            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
     }
 }

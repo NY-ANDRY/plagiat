@@ -1,17 +1,20 @@
 <header class="flex h-16 border-b border-neutral-200 items-center justify-between px-4">
     <div class="flex items-center gap-2">
         <div class="breadcrumbs text-sm">
-            <ul>
-                <li><a>Home</a></li>
-                <li><a>Documents</a></li>
-                <li>Add Document</li>
-            </ul>
+
         </div>
     </div>
-    <div class="flex h-full">
+    <div class="flex items-center gap-6 px-2 h-full">
+        <div class="flex items-center gap-6">
+            <x-lucide-message-circle class="w-5" />
+            <x-lucide-bell class="w-5" />
+        </div>
+
+        <div class="flex w-px h-6 bg-neutral-200"></div>
+
         <div class="dropdown dropdown-end h-full">
             <div tabindex="0"
-                class="cursor-pointer border-b-2 border-transparent hover:border-neutral-400 px-4 h-full flex items-center">
+                class="cursor-pointer border-b-2 border-transparent hover:border-neutral-400 h-full flex items-center">
                 <img src="{{ Auth::user()->imageUrl() }}" alt="{{ Auth::user()->name }}"
                     class="w-10 h-10 mask mask-squircle" />
             </div>
@@ -43,4 +46,5 @@
             </ul>
         </div>
     </div>
+
 </header>

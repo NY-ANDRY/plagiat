@@ -7,5 +7,45 @@
 
 
 button {
-    @apply cursor-pointer;
+    @apply cursor-pointer rounded-none;
+}
+
+.activable {
+    @apply cursor-pointer hover:bg-neutral-50 active:bg-neutral-100 transition-all;
+}
+
+h2 {
+    @apply text-2xl font-semibold capitalize;
+}
+
+h3 {
+    @apply text-xl font-semibold capitalize;
+}
+
+.box {
+    @apply px-6 py-4;
+}
+
+.b-t {
+    @apply border-t border-neutral-200;
+}
+
+.b-b {
+    @apply border-b border-neutral-200;
+}
+
+.b-l {
+    @apply border-l border-neutral-200;
+}
+
+.b-r {
+    @apply border-r border-neutral-200;
+}
+
+.b-f {
+    @apply border border-neutral-200;
+}
+
+.ss-v {
+    @apply h-full max-h-full overflow-hidden overflow-y-hidden;
 }
