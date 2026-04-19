@@ -64,15 +64,30 @@ class StudentController extends Controller
         return view('student.exam.details', compact('submission', 'code', 'language', 'structure', 'mediaType', 'mediaData'));
     }
 
+    public function download($id, Request $request)
+    {
+        $user = $request->user();
+
+        $submission = Submission::where('exam_id', $id)
+            ->where('student_id', $user->id)
+            ->firstOrFail();
+
+        $zipPath = Storage::disk('public')->path($submission->url_file);
+
+        return response()->download(
+            $zipPath, $submission->file_filename . '.' . $submission->file_extension
+        );
+    }
+
     public function submission($id, Request $request): RedirectResponse
     {
-        if (! $request->hasFile('file')) {
+        if (!$request->hasFile('file')) {
             return back()->with('error', 'No file selected');
         }
         $user = $request->user();
 
         $submission = Submission::where('exam_id', $id)->where('student_id', $user->id)->first();
-        if (! empty($submission)) {
+        if (!empty($submission)) {
             $submission->delete();
         }
 
@@ -94,7 +109,7 @@ class StudentController extends Controller
         $user = $request->user();
 
         $submission = Submission::where('exam_id', $id)->where('student_id', $user->id)->first();
-        if (! empty($submission)) {
+        if (!empty($submission)) {
             $submission->delete();
         }
 

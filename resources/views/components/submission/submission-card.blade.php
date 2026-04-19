@@ -23,21 +23,25 @@
             </div>
         </div>
         <div class="flex items-center justify-between">
-            <span class="text-neutral-300 text-sm">
-                {{$submission->created_at->format('H:i')}}
-                @if (!$stop)
-                    <span>-</span> {{$submission->created_at->format('d-m-Y')}}
-                @endif
-            </span>
-            <span class="text-neutral-300 text-sm">
-                @if ($stop)
+            <span class="text-neutral-300 text-sm flex items-center gap-2">
+                <span>
+                    {{$submission->created_at->format('H:i')}}
+                </span>
+                <span>-</span>
+                <span>
                     {{$submission->created_at->format('d-m-Y')}}
-                @else
+                </span>
+            </span>
+            <div class="text-neutral-300 text-sm flex items-center gap-2">
+                <a href="{{ route('student.exam.download', $submission->exam->id) }}">
+                    <button class="btn-soft!">download</button>
+                </a>
+                @if (!$stop)
                     <a href="{{ route('student.exam', $submission->exam->id) }}">
                         <button>view</button>
                     </a>
                 @endif
-            </span>
+            </div>
         </div>
     </div>
 

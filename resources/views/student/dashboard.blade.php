@@ -8,7 +8,7 @@
             @endforeach
 
             @if ($submissions->isEmpty())
-                <p class="box">Aucun examen disponible.</p>
+                <p class="box">no submission found.</p>
             @endif
         </div>
 
