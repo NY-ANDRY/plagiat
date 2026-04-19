@@ -10,6 +10,7 @@ use Illuminate\View\Component;
 class Edit extends Component
 {
     public $user;
+
     /**
      * Create a new component instance.
      */

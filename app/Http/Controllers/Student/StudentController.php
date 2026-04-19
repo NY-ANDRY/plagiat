@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
 use App\Models\Submission;
+use App\Services\ZipService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class StudentController extends Controller
@@ -20,24 +23,56 @@ class StudentController extends Controller
         return view('student.dashboard', compact('exams', 'submissions'));
     }
 
-    public function exam($id): View
+    public function exam($id, Request $request): View
     {
         $exam = Exam::details($id);
+        $user = $request->user();
+        $submission = Submission::where('exam_id', $id)->where('student_id', $user->id)->first();
 
-        return view('student.exam', compact('exam'));
+        return view('student.exam.view', compact('exam', 'submission'));
+    }
+
+    public function view($id, Request $request): View
+    {
+        $user = $request->user();
+        $submission = Submission::where('exam_id', $id)->where('student_id', $user->id)->first();
+
+        $code = null;
+        $language = 'plaintext';
+        $structure = [];
+        $mediaType = null;
+        $mediaData = null;
+
+        $flatFiles = [];
+        if ($submission) {
+            $zipPath = Storage::disk('public')->path($submission->url_file);
+            $structure = ZipService::getStructure($zipPath);
+
+            $flatFiles = Arr::flatten($structure);
+
+            if ($request->has('file') && in_array($request->query('file'), $flatFiles)) {
+                $requestedFile = $request->query('file');
+
+                $fileInfo = ZipService::getFileContentAndLanguage($zipPath, $requestedFile);
+                $code = $fileInfo['code'];
+                $language = $fileInfo['language'];
+                $mediaType = $fileInfo['mediaType'];
+                $mediaData = $fileInfo['mediaData'];
+            }
+        }
+
+        return view('student.exam.details', compact('submission', 'code', 'language', 'structure', 'mediaType', 'mediaData'));
     }
 
     public function submission($id, Request $request): RedirectResponse
     {
-        if (!$request->hasFile('file')) {
+        if (! $request->hasFile('file')) {
             return back()->with('error', 'No file selected');
         }
         $user = $request->user();
 
-        $submission = Submission::where('exam_id', $id)
-            ->where('student_id', $user->id)
-            ->first();
-        if (!empty($submission)) {
+        $submission = Submission::where('exam_id', $id)->where('student_id', $user->id)->first();
+        if (! empty($submission)) {
             $submission->delete();
         }
 
@@ -54,9 +89,22 @@ class StudentController extends Controller
         return redirect()->route('student.exam', $id);
     }
 
+    public function removeSubmission($id, Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        $submission = Submission::where('exam_id', $id)->where('student_id', $user->id)->first();
+        if (! empty($submission)) {
+            $submission->delete();
+        }
+
+        return redirect()->route('student.exam', $id);
+    }
+
     public function profile(Request $request): View
     {
         $user = $request->user();
+
         return view('student.profile', compact('user'));
     }
 }

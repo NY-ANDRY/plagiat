@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('exam_statuts_history', function (Blueprint $table) {
+        Schema::create('exam_statut_history', function (Blueprint $table) {
             $table->id();
             $table->foreignId('exam_id')->constrained('exams')->cascadeOnDelete();
             $table->foreignId('status_id')->constrained('exam_statuts')->cascadeOnDelete();
@@ -34,7 +34,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exam_statuts_history');
+        Schema::dropIfExists('exam_statut_history');
         Schema::dropIfExists('exam_statuts');
     }
 };

@@ -7,8 +7,33 @@
 
 
 button {
-    @apply btn btn-sm btn-neutral cursor-pointer rounded-none;
+    @apply btn btn-sm btn-neutral cursor-pointer rounded-none shadow-none;
 }
+
+.warning {
+    @apply bg-red-500 border-0 text-white hover:bg-red-600 active:bg-red-700 transition-all;
+}
+
+details {
+    @apply rounded-none!;
+}
+
+details summary {
+    @apply rounded-none!;
+}
+
+details ul {
+    @apply rounded-none!;
+}
+
+details li {
+    @apply rounded-none!;
+}
+
+details a {
+    @apply rounded-none!;
+}
+
 
 .status {
     @apply rounded-none;

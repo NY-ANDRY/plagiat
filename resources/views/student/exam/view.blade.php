@@ -30,8 +30,29 @@
                 </div>
             </div>
 
+            @if ($submission)
+                <div class="box b-b flex items-center justify-between">
+                    <h3>
+                        your submission
+                    </h3>
+                    <div class="flex">
+                        <form action="{{ route('exam.submission.delete', $exam->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="warning">remove</button>
+                        </form>
+                    </div>
+                </div>
+                <x-submission.submission-card :submission="$submission" :stop="true" />
+            @endif
+
             <div class="box b-b flex flex-col gap-4 w-full">
-                <h3>Participate</h3>
+
+                @if ($submission)
+                    <h3>Overrite Submission</h3>
+                @else
+                    <h3>Participate</h3>
+                @endif
                 <form action="{{ route('exam.submission', $exam->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <fieldset class="fieldset">

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ZIP Viewer - Editeur de code</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #1e1e1e; }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #1e1e1e; }
+        ::-webkit-scrollbar-thumb { background: #424242; }
+        ::-webkit-scrollbar-thumb:hover { background: #4f4f4f; }
+        
+        .sidebar { background-color: #252526; border-right: 1px solid #333; }
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            cursor: pointer;
+            color: #cccccc;
+            font-size: 13px;
+            transition: background 0.1s, color 0.1s;
+            position: relative;
+        }
+        .file-item:hover { background-color: #2a2d2e; color: #ffffff; }
+        .file-item.active { background-color: #37373d; color: #ffffff; }
+        .icon { width: 16px; height: 16px; flex-shrink: 0; }
+        .chevron { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.2s; }
+        .tree-children { display: none; }
+        .tree-children.open { display: block; }
+    </style>
+</head>
+
+<body class="flex h-screen w-screen text-gray-300 font-sans">
+    
+    <!-- Sidebar -->
+    <div class="sidebar flex flex-col w-64 h-full shrink-0">
+        <div class="p-4 text-xs font-bold tracking-widest text-gray-400 uppercase">
+            Explorer
+        </div>
+        <div id="file-tree" class="flex-1 overflow-auto pb-4">
+            <!-- Loading -->
+            <div class="p-4 text-sm text-gray-500 animate-pulse">Chargement de l'archive...</div>
+        </div>
+    </div>
+
+    <!-- Main Editor -->
+    <div class="flex flex-col flex-1 h-full min-w-0 bg-[#1e1e1e]">
+        
+        <!-- Tabs -->
+        <div class="flex items-center bg-[#252526] h-9 border-b border-[#333]">
+            <div id="editor-tab" class="hidden items-center gap-2 h-full px-4 border-r border-[#333] bg-[#1e1e1e] text-[#ccc] text-sm cursor-pointer border-t border-t-transparent hover:text-white">
+                <i data-lucide="file-code" class="w-4 h-4 text-sky-400"></i>
+                <span id="editor-filename">sélectionnez un fichier</span>
+            </div>
+        </div>
+
+        <!-- Editor container -->
+        <div id="editor" class="flex-1 w-full"></div>
+    </div>
+
+    <script>
+        require.config({ paths: { vs: 'https://unpkg.com/monaco-editor/min/vs' } });
+        let editor;
+
+        require(['vs/editor/editor.main'], function () {
+            editor = monaco.editor.create(document.getElementById('editor'), {
+                value: '// Sélectionnez un fichier dans l\'explorateur pour afficher son contenu.',
+                language: 'javascript',
+                theme: 'vs-dark',
+                readOnly: true,
+                automaticLayout: true,
+                fontFamily: "'JetBrains Mono', 'Fira Code', Consolas, monospace",
+                fontSize: 14,
+                minimap: { enabled: false },
+                scrollBeyondLastLine: false,
+                renderLineHighlight: "all"
+            });
+
+            fetch('/zip/tree/projet.zip')
+                .then(res => res.json())
+                .then(files => {
+                    const tree = buildTree(files);
+                    const container = document.getElementById('file-tree');
+                    container.innerHTML = '';
+                    
+                    renderTree(tree, container, 0);
+                    lucide.createIcons();
+                })
+                .catch(err => {
+                    document.getElementById('file-tree').innerHTML = '<div class="p-4 text-red-500 text-sm">Erreur de chargement</div>';
+                });
+        });
+
+        function buildTree(files) {
+            const root = [];
+            files.forEach(path => {
+                let parts = path.split('/');
+                let currentLevel = root;
+                
+                for (let i = 0; i < parts.length; i++) {
+                    let part = parts[i];
+                    let existingPath = currentLevel.find(p => p.name === part);
+                    
+                    if (existingPath) {
+                        currentLevel = existingPath.children;
+                    } else {
+                        let isFile = (i === parts.length - 1);
+                        let newPart = { 
+                            name: part, 
+                            isFile: isFile, 
+                            path: isFile ? path : null, 
+                            children: [] 
+                        };
+                        currentLevel.push(newPart);
+                        currentLevel = newPart.children;
+                    }
+                }
+            });
+            return root;
+        }
+
+        function getFileIcon(name) {
+            const lower = name.toLowerCase();
+            if (lower.endsWith('.json')) return 'file-json';
+            if (lower.match(/\.(php|js|css|html|blade\.php|ts|vue|jsx)$/)) return 'file-code';
+            if (lower.match(/\.(svg|png|jpg|jpeg|gif|webp)$/)) return 'image';
+            if (lower.match(/\.(md|txt)$/)) return 'file-text';
+            return 'file';
+        }
+        
+        function getIconColor(name) {
+            const lower = name.toLowerCase();
+            if (lower.endsWith('.php')) return 'text-indigo-400';
+            if (lower.endsWith('.js')) return 'text-yellow-400';
+            if (lower.endsWith('.json')) return 'text-yellow-200';
+            if (lower.endsWith('.css')) return 'text-blue-400';
+            if (lower.endsWith('.html') || lower.endsWith('.blade.php')) return 'text-orange-400';
+            if (lower.match(/\.(svg|png|jpg|jpeg)$/)) return 'text-emerald-400';
+            return 'text-gray-400';
+        }
+
+        function renderTree(nodes, container, depth) {
+            nodes.sort((a, b) => {
+                if (a.isFile !== b.isFile) return a.isFile ? 1 : -1;
+                return a.name.localeCompare(b.name);
+            });
+
+            nodes.forEach(node => {
+                const el = document.createElement('div');
+                const header = document.createElement('div');
+                header.className = 'file-item select-none';
+                header.style.paddingLeft = (depth * 12 + 10) + 'px';
+
+                const defaultExpanded = depth < 2;
+                
+                if (!node.isFile) {
+                    const chIcon = document.createElement('i');
+                    chIcon.setAttribute('data-lucide', defaultExpanded ? 'chevron-down' : 'chevron-right');
+                    chIcon.className = 'chevron';
+                    header.appendChild(chIcon);
+                    
+                    const fIcon = document.createElement('i');
+                    fIcon.setAttribute('data-lucide', defaultExpanded ? 'folder-open' : 'folder');
+                    fIcon.className = 'icon text-blue-400';
+                    header.appendChild(fIcon);
+                } else {
+                    const spacer = document.createElement('div');
+                    spacer.className = 'w-[14px] flex-shrink-0';
+                    header.appendChild(spacer);
+                    
+                    const fIcon = document.createElement('i');
+                    fIcon.setAttribute('data-lucide', getFileIcon(node.name));
+                    fIcon.className = 'icon ' + getIconColor(node.name);
+                    header.appendChild(fIcon);
+                }
+
+                const text = document.createElement('span');
+                text.className = 'truncate';
+                text.innerText = node.name;
+                header.appendChild(text);
+
+                el.appendChild(header);
+
+                if (!node.isFile) {
+                    const childrenContainer = document.createElement('div');
+                    childrenContainer.className = 'tree-children' + (defaultExpanded ? ' open' : '');
+                    el.appendChild(childrenContainer);
+                    
+                    renderTree(node.children, childrenContainer, depth + 1);
+
+                    header.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isOpen = childrenContainer.classList.contains('open');
+                        
+                        if (isOpen) {
+                            childrenContainer.classList.remove('open');
+                            header.children[0].setAttribute('data-lucide', 'chevron-right');
+                            header.children[1].setAttribute('data-lucide', 'folder');
+                        } else {
+                            childrenContainer.classList.add('open');
+                            header.children[0].setAttribute('data-lucide', 'chevron-down');
+                            header.children[1].setAttribute('data-lucide', 'folder-open');
+                        }
+                        lucide.createIcons({
+                            nameAttr: 'data-lucide',
+                            root: header
+                        });
+                    });
+                } else {
+                    header.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        
+                        document.querySelectorAll('.file-item.active').forEach(elem => {
+                            elem.classList.remove('active');
+                        });
+                        header.classList.add('active');
+                        
+                        loadFile(node.path, node.name);
+                    });
+                }
+
+                container.appendChild(el);
+            });
+        }
+
+        function getLanguage(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const map = {
+                'php': 'php', 'js': 'javascript', 'ts': 'typescript', 
+                'json': 'json', 'css': 'css', 'html': 'html', 'md': 'markdown',
+                'xml': 'xml', 'sql': 'sql', 'yaml': 'yaml', 'yml': 'yaml'
+            };
+            return map[ext] || 'plaintext';
+        }
+
+        function loadFile(path, filename) {
+            const tab = document.getElementById('editor-tab');
+            const fname = document.getElementById('editor-filename');
+            tab.classList.remove('hidden');
+            tab.classList.add('flex');
+            tab.style.borderTopColor = '#007acc';
+            fname.innerText = filename;
+            
+            const tabIcon = tab.querySelector('i');
+            tabIcon.setAttribute('data-lucide', getFileIcon(filename));
+            tabIcon.className = 'w-4 h-4 ' + getIconColor(filename);
+            lucide.createIcons({ root: tab });
+            
+            editor.setValue('// Chargement du fichier...');
+
+            fetch('/zip/file/projet.zip?path=' + path)
+                .then(res => res.text())
+                .then(code => {
+                    const lang = getLanguage(filename);
+                    monaco.editor.setModelLanguage(editor.getModel(), lang);
+                    editor.setValue(code);
+                })
+                .catch(() => {
+                    editor.setValue('// Impossible de charger ce fichier.');
+                });
+        }
+    </script>
+</body>
+</html>

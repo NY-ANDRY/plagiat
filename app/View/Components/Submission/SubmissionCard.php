@@ -11,9 +11,13 @@ class SubmissionCard extends Component
 {
     public Submission $submission;
 
-    public function __construct($submission)
+    public $stop = false;
+
+    public function __construct($submission, $stop = false)
     {
         $this->submission = $submission;
+        $this->stop = $stop;
+
     }
 
     public function render(): View|Closure|string

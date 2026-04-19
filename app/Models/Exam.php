@@ -42,9 +42,17 @@ class Exam extends Model
             ->wherePivotNull('deleted_at');
     }
 
+    public function fileRestrictions(): BelongsToMany
+    {
+        return $this->belongsToMany(FileRestriction::class, 'exam_file_restriction', 'exam_id', 'restriction_id')
+            ->using(ExamFileRestriction::class)
+            ->withTimestamps();
+    }
+
     public function statuses(): BelongsToMany
     {
-        return $this->belongsToMany(ExamStatus::class, 'exam_statuts_history', 'exam_id', 'status_id')
+        return $this->belongsToMany(ExamStatus::class, 'exam_statut_history', 'exam_id', 'status_id')
+            ->using(ExamStatusHistory::class)
             ->withPivot(['user_id'])
             ->withTimestamps();
     }
@@ -63,7 +71,7 @@ class Exam extends Model
             'fileExtensions',
             'statuses' => function ($query) {
                 $query->orderByPivot('created_at', 'desc');
-            }
+            },
         ])->get();
 
         $result = $result->sortByDesc(function ($exam) {
@@ -83,7 +91,7 @@ class Exam extends Model
             'statuses' => function ($query) {
                 $query->orderByPivot('created_at', 'desc');
             },
-            'submissions.student'
+            'submissions.student',
         ])->find($id);
     }
 }

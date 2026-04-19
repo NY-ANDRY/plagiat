@@ -15,7 +15,27 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('extension')->unique();
-            $table->string('url_icon')->unique();
+            $table->string('url_icon')->nullable();
+            $table->softDeletes();
+            $table->timestamps();
+        });
+
+        Schema::create('file_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('url_icon')->nullable();
+            $table->softDeletes();
+            $table->timestamps();
+        });
+
+        Schema::create('file_restrictions', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('name')->unique();
+            $table->foreignId('file_type_id')->constrained('file_types');
+            $table->foreignId('file_extension_id')->nullable()->constrained('file_extensions')->nullOnDelete();
+            $table->string('url_icon')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
         });
@@ -27,6 +47,15 @@ return new class extends Migration
             $table->date('close_date');
             $table->foreignId('creator_id')->constrained('users')->cascadeOnDelete();
             $table->softDeletes();
+            $table->timestamps();
+        });
+
+        Schema::create('exam_file_restriction', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('exam_id')->constrained('exams')->cascadeOnDelete();
+            $table->foreignId('restriction_id')->constrained('file_restrictions')->cascadeOnDelete();
+
             $table->timestamps();
         });
 
@@ -45,7 +74,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('exam_file_extension');
+        Schema::dropIfExists('exam_file_restriction');
         Schema::dropIfExists('exams');
+        Schema::dropIfExists('file_restrictions');
+        Schema::dropIfExists('file_types');
         Schema::dropIfExists('file_extensions');
     }
 };

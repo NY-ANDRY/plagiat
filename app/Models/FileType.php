@@ -2,25 +2,22 @@
 
 namespace App\Models;
 
-use Database\Factories\FileExtensionFactory;
+use Database\Factories\FileTypeFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['name', 'extension', 'url_icon'])]
-class FileExtension extends Model
+#[Fillable(['name', 'url_icon'])]
+class FileType extends Model
 {
-    /** @use HasFactory<FileExtensionFactory> */
+    /** @use HasFactory<FileTypeFactory> */
     use HasFactory, SoftDeletes;
 
-    public function exams(): BelongsToMany
+    public function restrictions(): HasMany
     {
-        return $this->belongsToMany(Exam::class)
-            ->using(ExamFileExtension::class)
-            ->withTimestamps()
-            ->wherePivotNull('deleted_at');
+        return $this->hasMany(FileRestriction::class);
     }
 
     public function iconUrl(): string
