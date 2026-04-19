@@ -75,7 +75,8 @@ class StudentController extends Controller
         $zipPath = Storage::disk('public')->path($submission->url_file);
 
         return response()->download(
-            $zipPath, $submission->file_filename . '.' . $submission->file_extension
+            $zipPath,
+            $submission->file_filename . '.' . $submission->file_extension
         );
     }
 
@@ -88,6 +89,7 @@ class StudentController extends Controller
 
         $submission = Submission::where('exam_id', $id)->where('student_id', $user->id)->first();
         if (!empty($submission)) {
+            Storage::disk('public')->delete($submission->url_file);
             $submission->delete();
         }
 

@@ -17,10 +17,10 @@
         </div>
         <div class="flex w-full h-full">
             <div class="explorer w-64 b-r overflow-y-auto overflow-x-hidden">
-                <x-student.zip-explorer :structure="$structure" />
+                <x-editor.explorer :structure="$structure" />
             </div>
             <div class="editor flex-1 overflow-auto">
-                <x-monaco.editor :code="$code" :language="$language" :mediaType="$mediaType" :mediaData="$mediaData" />
+                <x-editor.editor :code="$code" :language="$language" :mediaType="$mediaType" :mediaData="$mediaData" />
             </div>
         </div>
     </div>

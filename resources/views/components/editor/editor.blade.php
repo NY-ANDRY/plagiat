@@ -1,4 +1,3 @@
-@props(['code' => null, 'language' => 'plaintext', 'mediaType' => null, 'mediaData' => null])
 
 @if ($mediaType)
     <div class="flex items-center justify-center w-full h-full bg-neutral-50 p-6">
