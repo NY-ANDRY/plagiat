@@ -15,7 +15,8 @@ class Prof extends Component
         return view('layouts.prof', [
             'nav' => [
                 ['label' => 'dashboard', 'url' => '/prof/dashboard', 'icon' => 'layout-dashboard'],
-                ['label' => 'examens', 'url' => '/prof/exam', 'icon' => 'file-text'],
+                ['label' => 'exams', 'url' => '/prof/exams', 'icon' => 'file-text'],
+                ['label' => 'students', 'url' => '/prof/students', 'icon' => 'graduation-cap'],
             ],
         ]);
     }

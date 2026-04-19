@@ -4,20 +4,15 @@
     </div>
     <div class="flex flex-col gap-0 flex-1">
         @foreach ($nav as $item)
-            <a href="{{ $item['url'] }}"
-                class="flex items-center px-6 py-3 text-sm activable text-neutral-600 capitalize">
+            <a href="{{ $item['url'] }}" class="flex items-center px-6 py-3 text-sm activable text-neutral-600 capitalize">
                 <x-dynamic-component :component="'lucide-' . $item['icon']" class="w-4 h-4 mr-3" />
                 <span class="text-gray-700">{{ $item['label'] }}</span>
             </a>
         @endforeach
     </div>
-    <div class="flex flex-col">
-        <form action="{{ route('logout') }}" method="post">
-            @csrf
-            <button type="submit"
-                class="flex items-center px-6 py-3 text-sm activable text-neutral-600 capitalize w-full text-left">
-                <span class="text-gray-700">Logout</span>
-            </button>
-        </form>
-    </div>
+    <a href="{{ route('logout') }}">
+        <div class="box activable b-t flex flex-col w-full">
+            Logout
+        </div>
+    </a>
 </div>

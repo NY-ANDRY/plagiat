@@ -1,6 +1,6 @@
 <div class="box flex gap-4 b-b">
 
-    <a href="{{ route('student.exam.view', $submission->exam->id) }}"
+    <a href="{{ route('submission.read', $submission->id) }}"
         class="b-f flex flex-col items-center w-20 gap-4 px-2 py-4 activable">
         <x-lucide-file-archive class="w-6" />
         <div class="flex text-sm text-neutral-600 max-w-full">
@@ -33,11 +33,11 @@
                 </span>
             </span>
             <div class="text-neutral-300 text-sm flex items-center gap-2">
-                <a href="{{ route('student.exam.download', $submission->exam->id) }}">
+                <a href="{{ route('submission.download', $submission->id) }}">
                     <button class="btn-soft!">download</button>
                 </a>
-                @if (!$stop)
-                    <a href="{{ route('student.exam', $submission->exam->id) }}">
+                @if (!$stop && $viewUrl)
+                    <a href="{{ $viewUrl }}">
                         <button>view</button>
                     </a>
                 @endif

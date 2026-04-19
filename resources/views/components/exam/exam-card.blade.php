@@ -1,4 +1,4 @@
-<a href="{{ route('student.exam', $exam->id) }}" class="box b-b flex flex-col gap-6 w-full activable">
+<a href="{{ $href }}" class="box b-b flex flex-col gap-6 w-full activable">
     <div class="flex flex-col gap-2">
 
         <div class="flex items-center justify-between">

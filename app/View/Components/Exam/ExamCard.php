@@ -9,9 +9,12 @@ class ExamCard extends Component
 {
     public Exam $exam;
 
-    public function __construct(Exam $exam)
+    public $href;
+
+    public function __construct(Exam $exam, $href = '#')
     {
         $this->exam = $exam;
+        $this->href = $href;
     }
 
     public function render()

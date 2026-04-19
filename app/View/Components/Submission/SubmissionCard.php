@@ -13,10 +13,13 @@ class SubmissionCard extends Component
 
     public $stop = false;
 
-    public function __construct($submission, $stop = false)
+    public ?string $viewUrl;
+
+    public function __construct($submission, $stop = false, $viewUrl = null)
     {
         $this->submission = $submission;
         $this->stop = $stop;
+        $this->viewUrl = $viewUrl;
 
     }
 

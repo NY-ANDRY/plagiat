@@ -15,11 +15,7 @@
                         <x-lucide-folder class="w-4 h-4 mr-1 inline-block" />
                         <span class="truncate">{{ $name }}</span>
                     </summary>
-                    <x-editor.explorer 
-                        :structure="$item" 
-                        :isRoot="false" 
-                        :currentPath="$folderPath"
-                    />
+                    <x-editor.explorer :structure="$item" :isRoot="false" :currentPath="$folderPath" />
                 </details>
             </li>
         @else

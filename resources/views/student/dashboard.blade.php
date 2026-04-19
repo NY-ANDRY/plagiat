@@ -4,7 +4,7 @@
         <div class="b-r min-h-full w-4xl">
             <h2 class="box b-b">recent submissions</h2>
             @foreach ($submissions as $submission)
-                <x-submission.submission-card :submission="$submission" />
+                <x-submission.submission-card :submission="$submission" viewUrl="{{ route('student.exam', $submission->exam_id) }}" />
             @endforeach
 
             @if ($submissions->isEmpty())
@@ -15,7 +15,7 @@
         <div class="flex flex-col ss-v w-full">
             <h2 class="box b-b">exams</h2>
             @foreach ($exams as $exam)
-                <x-exam.exam-card :exam="$exam" />
+                <x-exam.exam-card :exam="$exam" :href="route('student.exam', $exam->id)" />
             @endforeach
 
             @if ($exams->isEmpty())
