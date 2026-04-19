@@ -1,3 +1,3 @@
-<x-prof-layout>
+<x-layout.prof>
     dashboard
-</x-prof-layout>
+</x-layout.prof>

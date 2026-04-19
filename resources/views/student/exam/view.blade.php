@@ -1,4 +1,4 @@
-<x-student-layout>
+<x-layout.student>
     <div class="flex justify-between min-h-full gap-0">
         <div class="flex flex-col flex-1">
             <div class="box flex flex-col gap-2 b-b">
@@ -92,4 +92,4 @@
             </div>
         </div>
     </div>
-</x-student-layout>
+</x-layout.student>

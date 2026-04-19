@@ -1,17 +1,18 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Layout;
 
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
-class GlobalHeader extends Component
+class Guest extends Component
 {
     /**
      * Get the view / contents that represents the component.
      */
     public function render(): View
     {
-        return view('layouts.header');
+        return view('layouts.guest', [
+        ]);
     }
 }

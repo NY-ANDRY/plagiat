@@ -1,4 +1,4 @@
-<x-student-layout>
+<x-layout.student>
     <div class="flex min-h-full">
 
         <div class="b-r min-h-full w-4xl">
@@ -23,4 +23,4 @@
             @endif
         </div>
     </div>
-</x-student-layout>
+</x-layout.student>

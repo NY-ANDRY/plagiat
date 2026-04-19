@@ -1,4 +1,4 @@
-<x-student-layout>
+<x-layout.student>
     <div class="flex flex-col h-full">
         <div class="b-b flex items-center w-full gap-2">
             <a href="{{ url()->previous() }}" class="box b-r flex activable">
@@ -24,4 +24,4 @@
             </div>
         </div>
     </div>
-</x-student-layout>
+</x-layout.student>

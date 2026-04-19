@@ -18,7 +18,7 @@
                 <img src="{{ Auth::user()->imageUrl() }}" alt="{{ Auth::user()->name }}"
                     class="w-10 h-10 mask mask-decagon" />
             </div>
-            <ul tabindex="0" class="menu dropdown-content mt-3 z-1 p-0 shadow bg-base-100 rounded-none w-68 z-10">
+            <ul tabindex="0" class="menu dropdown-content mt-3 p-0 shadow bg-base-100 rounded-none w-68 z-10">
                 <li><a href="{{ route('profile.edit') }}"
                         class="rounded-none h-12 flex items-center hover:bg-neutral-100 active:text-neutral-900 capitalize">profile
                     </a>

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Layout;
 
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
-class AppLayout extends Component
+class App extends Component
 {
     /**
      * Get the view / contents that represents the component.

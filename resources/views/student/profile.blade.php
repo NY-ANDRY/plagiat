@@ -1,3 +1,3 @@
-<x-student-layout>
+<x-layout.student>
     <x-profile.edit />
-</x-student-layout>
+</x-layout.student>

@@ -1,3 +1,3 @@
-<x-app-layout>
+<x-layout.app>
     <x-profile.edit />
-</x-app-layout>
+</x-layout.app>
