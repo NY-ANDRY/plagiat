@@ -63,8 +63,7 @@ class ZipController extends Controller
 
     public function view()
     {
-        $code = "print('hello world')dsa
-dsadsa";
+        $code = "print('hello world')";
         $language = 'python';
 
         return view('zip-view', compact('code', 'language'));
