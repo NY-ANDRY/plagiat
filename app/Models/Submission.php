@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['exam_id', 'student_id', 'url_file'])]
+#[Fillable(['exam_id', 'student_id', 'url_file', 'file_extension', 'file_filename'])]
 class Submission extends Model
 {
     /** @use HasFactory<FileExtensionFactory> */
@@ -23,5 +23,10 @@ class Submission extends Model
     public function student(): BelongsTo
     {
         return $this->belongsTo(User::class, 'student_id');
+    }
+
+    public static function history($student_id)
+    {
+        return Submission::with(['exam'])->where('student_id', '=', $student_id)->orderByDesc('created_at')->get();
     }
 }

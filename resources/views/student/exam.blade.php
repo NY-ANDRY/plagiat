@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <img src="{{ $exam->creator->imageUrl() }}" class="w-8 mask mask-circle" alt="">
+                    <img src="{{ $exam->creator->imageUrl() }}" class="w-8 mask mask-decagon" alt="">
                     <div class="flex items-center gap-2">
                         <span class="text-neutral-400 text-sm">
                             Created by:
@@ -39,7 +39,7 @@
 
                         <div class="flex gap-4">
                             <input type="file" name="file" class="file-input" />
-                            <button class="btn btn-neutral">submit</button>
+                            <button>submit</button>
                         </div>
 
                         <label class="label">Max size 100MB</label>
@@ -55,8 +55,8 @@
             <div class="box flex flex-col gap-5">
                 @foreach ($exam->submissions as $submission)
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <img src="{{ $submission->student->imageUrl() }}" class="w-8 mask mask-squircle" alt="">
+                        <div class="flex items-center gap-3">
+                            <img src="{{ $submission->student->imageUrl() }}" class="w-8 mask mask-decagon" alt="">
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-medium text-neutral-800">
                                     {{ $submission->student->name }}

@@ -15,7 +15,7 @@ class StudentLayout extends Component
         return view('layouts.student', [
             'nav' => [
                 ['label' => 'dashboard', 'url' => '/student/dashboard', 'icon' => 'layout-dashboard'],
-                ['label' => 'examens', 'url' => '/student/exams', 'icon' => 'flame'],
+                ['label' => 'profile', 'url' => '/student/profile', 'icon' => 'user'],
             ],
         ]);
     }

@@ -11,20 +11,19 @@ use Illuminate\View\View;
 
 class StudentController extends Controller
 {
-    public function dashboard(): View
+    public function dashboard(Request $request): View
     {
-        return view('student.dashboard');
-    }
-
-    public function exams(): View
-    {
+        $user = $request->user();
         $exams = Exam::orderByOpenStatus();
-        return view('student.exams', compact('exams'));
+        $submissions = Submission::history($user->id);
+
+        return view('student.dashboard', compact('exams', 'submissions'));
     }
 
     public function exam($id): View
     {
         $exam = Exam::details($id);
+
         return view('student.exam', compact('exam'));
     }
 
@@ -35,18 +34,29 @@ class StudentController extends Controller
         }
         $user = $request->user();
 
-        $submission = Submission::where('exam_id', '=', $id, 'and', 'student_id', '=', $user->id)->first();
+        $submission = Submission::where('exam_id', $id)
+            ->where('student_id', $user->id)
+            ->first();
         if (!empty($submission)) {
             $submission->delete();
         }
 
-        $url_file = $request->file('file')->store('exam_submissions', 'public');
+        $file = $request->file('file');
+        $url_file = $file->store('exam_submissions', 'public');
         Submission::create([
             'exam_id' => $id,
             'student_id' => $user->id,
-            'url_file' => $url_file
+            'url_file' => $url_file,
+            'file_extension' => $file->extension(),
+            'file_filename' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
         ]);
 
         return redirect()->route('student.exam', $id);
+    }
+
+    public function profile(Request $request): View
+    {
+        $user = $request->user();
+        return view('student.profile', compact('user'));
     }
 }

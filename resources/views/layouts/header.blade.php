@@ -16,7 +16,7 @@
             <div tabindex="0"
                 class="cursor-pointer border-b-2 border-transparent hover:border-neutral-400 h-full flex items-center">
                 <img src="{{ Auth::user()->imageUrl() }}" alt="{{ Auth::user()->name }}"
-                    class="w-10 h-10 mask mask-squircle" />
+                    class="w-10 h-10 mask mask-decagon" />
             </div>
             <ul tabindex="0" class="menu dropdown-content mt-3 z-1 p-0 shadow bg-base-100 rounded-none w-68">
                 <li><a href="{{ route('profile.edit') }}"

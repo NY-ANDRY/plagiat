@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('exam_id')->constrained()->cascadeOnDelete();
             $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
             $table->string('url_file');
+            $table->string('file_extension');
+            $table->string('file_filename');
             $table->softDeletes();
             $table->timestamps();
         });
