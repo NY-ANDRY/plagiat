@@ -34,6 +34,11 @@ class Exam extends Model
         return $this->hasMany(Submission::class, 'exam_id');
     }
 
+    public function countParticipant()
+    {
+        return $this->submissions()->count();
+    }
+
     public function fileExtensions(): BelongsToMany
     {
         return $this->belongsToMany(FileExtension::class)

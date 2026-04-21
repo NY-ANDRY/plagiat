@@ -19,13 +19,18 @@
             @endif
         </div>
 
-        <div class="flex items-center gap-4">
-            @foreach ($exam->fileExtensions as $ext)
-                <div class="flex items-center gap-2 text-neutral-600 text-xs border border-neutral-300 px-2 py-1">
-                    <img src="{{ $ext->iconUrl() }}" class="w-4" alt="">
-                    <span>{{ $ext->name }}</span>
-                </div>
-            @endforeach
+        <div class="flex items-end justify-between">
+            <div class="flex items-center gap-4">
+                @foreach ($exam->fileExtensions as $ext)
+                    <x-icon.file-extension :extension="$ext" />
+                @endforeach
+            </div>
+            <div class="flex items-center gap-2 text-sm text-neutral-500">
+                <span>
+                    {{ $exam->countParticipant() }}
+                </span>
+                <x-lucide-users class="w-7 b-f p-1" />
+            </div>
         </div>
 
     </div>

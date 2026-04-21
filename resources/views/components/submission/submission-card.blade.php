@@ -16,9 +16,9 @@
                 {{$submission->exam->title}}
             </span>
             <div class="flex items-center gap-2 text-neutral-300 text-sm">
-                <span>by:</span>
+                <span>owner:</span>
                 <span class=" text-neutral-600">
-                    {{ $submission->exam->creator->name }}
+                    {{ $submission->student->name }}
                 </span>
             </div>
         </div>

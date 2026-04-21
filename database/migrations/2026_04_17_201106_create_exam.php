@@ -33,8 +33,6 @@ return new class extends Migration
 
             $table->string('name')->unique();
             $table->foreignId('file_type_id')->constrained('file_types');
-            $table->foreignId('file_extension_id')->nullable()->constrained('file_extensions')->nullOnDelete();
-            $table->string('url_icon')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

@@ -1,5 +1,6 @@
 <x-layout.prof>
     <div class="flex-1 flex">
+
         <div class="b-r flex flex-col w-lg h-full">
             <div class="flex items-center justify-between">
                 <div class="b-b w-full h-full flex items-center justify-between">
@@ -7,11 +8,13 @@
                 </div>
             </div>
             @foreach ($submissions as $submission)
-                <x-submission.submission-card :submission="$submission"  :stop="true"/>
+                <x-submission.submission-card :submission="$submission" :stop="true" />
             @endforeach
         </div>
+
         <div class="b-r flex-1 flex flex-col h-full">
-            
+            <x-plagiarism.view :idExam="$submission->exam_id" />
         </div>
+
     </div>
 </x-layout.prof>

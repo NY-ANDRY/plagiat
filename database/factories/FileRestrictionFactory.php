@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\FileExtension;
 use App\Models\FileRestriction;
 use App\Models\FileType;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,7 +21,6 @@ class FileRestrictionFactory extends Factory
         return [
             'name' => $this->faker->unique()->words(2, true),
             'file_type_id' => FileType::factory(),
-            'file_extension_id' => FileExtension::factory(),
             'url_icon' => null,
         ];
     }

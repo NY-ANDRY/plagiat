@@ -5,7 +5,7 @@
     <div class="flex flex-col flex-1">
         <x-layout.header />
 
-        <main class="flex-1 flex flex-col">
+        <main class="flex-1 flex flex-col overflow-hidden overflow-y-auto">
             {{ $slot }}
         </main>
     </div>

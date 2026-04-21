@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['name', 'file_type_id', 'file_extension_id', 'url_icon'])]
+#[Fillable(['name', 'file_type_id', 'url_icon'])]
 class FileRestriction extends Model
 {
     /** @use HasFactory<FileRestrictionFactory> */
@@ -19,11 +19,6 @@ class FileRestriction extends Model
     public function fileType(): BelongsTo
     {
         return $this->belongsTo(FileType::class);
-    }
-
-    public function fileExtension(): BelongsTo
-    {
-        return $this->belongsTo(FileExtension::class);
     }
 
     public function exams(): BelongsToMany

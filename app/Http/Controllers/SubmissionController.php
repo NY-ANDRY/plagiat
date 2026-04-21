@@ -13,6 +13,8 @@ class SubmissionController extends Controller
 {
     public function read(Submission $submission, Request $request): View
     {
+        $this->canReadSubmission($submission, $request);
+
         if (! $request->has('file')) {
             $previous = url()->previous();
             if (! str_contains($previous, $request->path())) {
@@ -21,18 +23,6 @@ class SubmissionController extends Controller
         }
 
         $user = $request->user();
-
-        $allowed = false;
-        if ($user->hasRole('prof')) {
-            $allowed = true;
-        }
-        if ($user->hasRole('student') && $submission->student_id !== $user->id) {
-            $allowed = true;
-        }
-        if (!$allowed) {
-            abort(403, 'Unauthorized access to submission.');
-        }
-
 
         $code = null;
         $language = 'plaintext';
@@ -58,7 +48,7 @@ class SubmissionController extends Controller
 
         $fallbackUrl = route('dashboard');
         if ($user->hasRole('prof')) {
-            $fallbackUrl = route('prof.exam', $submission->exam_id);
+            $fallbackUrl = route('prof.exams.show', $submission->exam_id);
         } elseif ($user->hasRole('student')) {
             $fallbackUrl = route('student.exam', $submission->exam_id);
         }
@@ -70,21 +60,31 @@ class SubmissionController extends Controller
 
     public function download(Submission $submission, Request $request)
     {
-        $user = $request->user();
-
-        if ($user->hasRole('student') && $submission->student_id !== $user->id) {
-            abort(403, 'Unauthorized access to submission.');
-        }
-
-        if ($user->hasRole('prof') && $submission->exam->creator_id !== $user->id) {
-            abort(403, 'Unauthorized access to submission.');
-        }
+        $this->canReadSubmission($submission, $request);
 
         $zipPath = Storage::disk('public')->path($submission->url_file);
 
         return response()->download(
             $zipPath,
-            $submission->file_filename . '.' . $submission->file_extension
+            $submission->file_filename.'.'.$submission->file_extension
         );
+    }
+
+    private function canReadSubmission(Submission $submission, Request $request)
+    {
+        $user = $request->user();
+
+        $authorized = false;
+
+        if ($user->hasRole('student') && $submission->student_id == $user->id) {
+            $authorized = true;
+        }
+        if ($user->hasRole('prof')) {
+            $authorized = true;
+        }
+
+        if (! $authorized) {
+            abort(403, 'Unauthorized access to submission.');
+        }
     }
 }

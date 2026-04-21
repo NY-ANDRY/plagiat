@@ -7,10 +7,7 @@
 
                 <div class="flex gap-2">
                     @foreach ($exam->fileExtensions as $ext)
-                        <div class="flex items-center gap-2 text-neutral-600 text-xs border border-neutral-300 px-2 py-1">
-                            <img src="{{ $ext->iconUrl() }}" class="w-4" alt="">
-                            <span>{{ $ext->name }}</span>
-                        </div>
+                        <x-icon.file-extension :extension="$ext" />
                     @endforeach
                 </div>
                 <div class="flex w-2xl text-neutral-700 text-sm my-4">
@@ -59,8 +56,12 @@
                         <legend class="fieldset-legend">Pick a file</legend>
 
                         <div class="flex gap-4">
-                            <input type="file" name="file" class="file-input" />
-                            <button>submit</button>
+                            <div class="w-xs">
+                                <input type="file" name="file" class="file-input" />
+                            </div>
+                            <div class="flex">
+                                <button>submit</button>
+                            </div>
                         </div>
 
                         <label class="label">Max size 100MB</label>

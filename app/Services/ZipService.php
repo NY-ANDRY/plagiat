@@ -19,7 +19,7 @@ class ZipService
     {
         $default = ['code' => null, 'language' => 'plaintext', 'mediaType' => null, 'mediaData' => null];
 
-        if (!file_exists($zipPath)) {
+        if (! file_exists($zipPath)) {
             return $default;
         }
 
@@ -43,7 +43,7 @@ class ZipService
                 'code' => null,
                 'language' => 'plaintext',
                 'mediaType' => $mimeType,
-                'mediaData' => 'data:' . $mimeType . ';base64,' . base64_encode($content),
+                'mediaData' => 'data:'.$mimeType.';base64,'.base64_encode($content),
             ];
         }
 
@@ -156,7 +156,7 @@ class ZipService
      */
     public static function getStructure(string $zipPath): array
     {
-        if (!file_exists($zipPath)) {
+        if (! file_exists($zipPath)) {
             return [];
         }
 
@@ -170,7 +170,7 @@ class ZipService
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $stat = $zip->statIndex($i);
-            if ($stat === false || !isset($stat['name'])) {
+            if ($stat === false || ! isset($stat['name'])) {
                 continue;
             }
 
@@ -194,12 +194,12 @@ class ZipService
                 }
 
                 // 📄 Fichier
-                if ($index === $lastIndex && !$isDirectory) {
+                if ($index === $lastIndex && ! $isDirectory) {
                     $current[$part] = $path;
                 }
                 // 📁 Dossier
                 else {
-                    if (!isset($current[$part]) || !is_array($current[$part])) {
+                    if (! isset($current[$part]) || ! is_array($current[$part])) {
                         $current[$part] = [];
                     }
 

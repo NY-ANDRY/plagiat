@@ -7,7 +7,7 @@
 
 
 button {
-    @apply btn btn-sm btn-neutral cursor-pointer rounded-none shadow-none;
+    @apply btn btn-sm btn-neutral cursor-pointer rounded-none shadow-none w-full;
 }
 
 .warning {
@@ -39,8 +39,31 @@ details a {
     @apply rounded-none;
 }
 
-input {
-    @apply input input-sm border-neutral-200 text-neutral-800 focus:outline-0 focus:shadow-none focus:border-neutral-800 rounded-none; 
+input[type="text"],
+input[type="password"],
+input[type="file"],
+input[type="date"]  {
+    @apply input input-sm w-full border-neutral-200 text-neutral-800 focus:outline-0 focus:shadow-none focus:border-neutral-800 rounded-none;
+}
+
+input[type="checkbox"]:active  {
+    @apply focus:shadow-none active:shadow-none ;
+}
+
+input[type="checkbox"]:focus  {
+    @apply focus:shadow-none active:shadow-none ;
+}
+
+input[type="checkbox"]:checked  {
+    @apply focus:shadow-none active:shadow-none ;
+}
+
+textarea {
+    @apply textarea textarea-sm w-full border-neutral-200 text-neutral-800 focus:outline-0 focus:shadow-none focus:border-neutral-600 rounded-none;
+}
+
+label {
+    @apply text-sm text-neutral-400 capitalize;
 }
 
 .file-input {
@@ -94,10 +117,10 @@ h3 {
 
 /* Firefox */
 * {
-  scrollbar-width: none;
+    scrollbar-width: none;
 }
 
 /* IE et anciens Edge */
 * {
-  -ms-overflow-style: none;
+    -ms-overflow-style: none;
 }

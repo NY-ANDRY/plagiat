@@ -19,7 +19,7 @@ class FileTypeSeeder extends Seeder
 
         FileType::updateOrCreate(
             ['name' => 'dir'],
-            ['url_icon' => 'file/folder.svg']
+            ['url_icon' => 'file/dir.svg']
         );
     }
 }
