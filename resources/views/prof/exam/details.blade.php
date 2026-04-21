@@ -13,7 +13,7 @@
         </div>
 
         <div class="b-r flex-1 flex flex-col h-full">
-            <x-plagiarism.view :idExam="$submission->exam_id" />
+            <x-plagiarism.view :idExam="$exam" />
         </div>
 
     </div>

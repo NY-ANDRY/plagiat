@@ -93,7 +93,7 @@ class ProfController extends Controller
     public function exams(Request $request): View
     {
         $user = $request->user();
-        $exams = Exam::where('creator_id', '=', $user->id)->get();
+        $exams = Exam::where('creator_id', '=', $user->id)->orderByDesc('created_at')->get();
         $quote = Inspiring::quote();
 
         return view('prof.exam.views', compact('quote', 'exams'));
@@ -101,10 +101,11 @@ class ProfController extends Controller
 
     public function exam($id, Request $request): View
     {
-        $submissions = Submission::where('exam_id', '=', $id)->get();
+        $submissions = Submission::where('exam_id', '=', $id)->orderBy('created_at')->get();
+        $exam = Exam::find($id);
         $quote = Inspiring::quote();
 
-        return view('prof.exam.details', compact('quote', 'submissions'));
+        return view('prof.exam.details', compact('quote', 'submissions', 'exam'));
     }
 
     public function student(): View
