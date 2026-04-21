@@ -99,4 +99,12 @@ class Exam extends Model
             'submissions.student',
         ])->find($id);
     }
+
+    /**
+     * Get the plagiarism checks associated with this exam.
+     */
+    public function plagiarisms(): HasMany
+    {
+        return $this->hasMany(Plagiarism::class);
+    }
 }

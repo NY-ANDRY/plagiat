@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ExamStatusSeeder::class,
             ExamSeeder::class,
+            AlgoSeeder::class,
         ]);
     }
 }

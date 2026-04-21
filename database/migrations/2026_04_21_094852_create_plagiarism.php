@@ -4,62 +4,88 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        // Schema::create('algorithmes', function (Blueprint $table) {
-        //     $table->id();
+        Schema::create('algos', function (Blueprint $table) {
+            $table->id();
 
-        //     $table->string('name');
-        //     $table->string('about');
+            $table->string('name');
+            $table->text('about')->nullable();
 
-        //     $table->softDeletes();
-        //     $table->timestamps();
-        // });
+            $table->softDeletes();
+            $table->timestamps();
+        });
 
-        // Schema::create('fingerprints', function (Blueprint $table) {
-        //     $table->id();
+        Schema::create('algo_props', function (Blueprint $table) {
+            $table->id();
 
-        //     // $table->js
+            $table->foreignId('algo_id')->constrained('algos')->cascadeOnDelete();
+            $table->string('name');
 
-        //     $table->softDeletes();
-        //     $table->timestamps();
-        // });
+            $table->softDeletes();
+            $table->timestamps();
+        });
 
-        // Schema::create('plagiarism', function (Blueprint $table) {
-        //     $table->id();
+        Schema::create('raw_projects', function (Blueprint $table) {
+            $table->id();
 
+            $table->foreignId('submission_id')->constrained('submissions')->cascadeOnDelete();
+            $table->longText('content');
 
+            $table->softDeletes();
+            $table->timestamps();
+        });
 
-        //     $table->softDeletes();
-        //     $table->timestamps();
-        // });
+        Schema::create('fingerprints', function (Blueprint $table) {
+            $table->id();
 
-        // Schema::create('plagiarism_results', function (Blueprint $table) {
-        //     $table->id();
+            $table->foreignId('submission_id')->constrained('submissions')->cascadeOnDelete();
+            $table->foreignId('raw_project_id')->constrained('raw_projects')->cascadeOnDelete();
+            $table->unsignedBigInteger('hash_value')->index();
+            $table->unsignedInteger('position');
 
-        //     $table->foreignId('algo_id')->constrained('algo')->cascadeOnDelete();
-        //     $table->foreignId('exam_id')->constrained('exams')->cascadeOnDelete();
-        //     $table->foreignId('rate');
+            $table->softDeletes();
+            $table->timestamps();
+        });
 
-        //     $table->softDeletes();
-        //     $table->timestamps();
-        // });
+        Schema::create('plagiarisms', function (Blueprint $table) {
+            $table->id();
 
-        // Schema::create('plagiarism_result_details', function (Blueprint $table) {
-        //     $table->id();
+            $table->foreignId('algo_id')->constrained('algos')->cascadeOnDelete();
+            $table->foreignId('exam_id')->constrained('exams')->cascadeOnDelete();
+            $table->decimal('rate', 5, 2)->default(0);
 
-        //     $table->foreignId('plagiarism_results_id')->constrained('plagiarism_results')->cascadeOnDelete();
-        //     $table->foreignId('submission_1_id')->constrained('submission');
-        //     $table->foreignId('submission_2_id')->constrained('submission');
-        //     $table->foreignId('rate');
+            $table->softDeletes();
+            $table->timestamps();
+        });
 
-        //     $table->softDeletes();
-        //     $table->timestamps();
-        // });
+        Schema::create('plagiarism_algo_props', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('plagiarism_id')->constrained('plagiarisms')->cascadeOnDelete();
+            $table->foreignId('algo_prop_id')->constrained('algo_props')->cascadeOnDelete();
+            $table->text('value')->nullable();
+
+            $table->softDeletes();
+            $table->timestamps();
+        });
+
+        Schema::create('plagiarism_results', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('plagiarism_id')->constrained('plagiarisms')->cascadeOnDelete();
+            $table->foreignId('submission_1_id')->constrained('submissions')->cascadeOnDelete();
+            $table->foreignId('submission_2_id')->constrained('submissions')->cascadeOnDelete();
+            $table->decimal('rate', 5, 2)->default(0);
+
+            $table->softDeletes();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -67,6 +93,12 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        // Schema::dropIfExists('plagiarism');
+        Schema::dropIfExists('plagiarism_results');
+        Schema::dropIfExists('plagiarism_algo_props');
+        Schema::dropIfExists('plagiarisms');
+        Schema::dropIfExists('fingerprints');
+        Schema::dropIfExists('raw_projects');
+        Schema::dropIfExists('algo_props');
+        Schema::dropIfExists('algos');
     }
 };
