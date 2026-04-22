@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Database\Factories\RawProjectFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,7 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RawProject extends Model
 {
-    use SoftDeletes;
+    /** @use HasFactory<RawProjectFactory> */
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'submission_id',

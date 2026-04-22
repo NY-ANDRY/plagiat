@@ -22,12 +22,12 @@ class AlgoSeeder extends Seeder
             ['name' => 'window size'],
         ]);
 
-        $bloom = Algo::create([
-            'name' => 'Bloom',
+        $jaccard = Algo::create([
+            'name' => 'Jaccard',
             'about' => 'Détection de plagiat utilisant des filtres de Bloom pour une comparaison probabiliste rapide.',
         ]);
 
-        $bloom->props()->createMany([
+        $jaccard->props()->createMany([
             ['name' => 'hash count'],
             ['name' => 'bit array size'],
         ]);

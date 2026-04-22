@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Database\Factories\SettingFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['name', 'value', 'about'])]
 class Setting extends Model
 {
-    use SoftDeletes;
+    /** @use HasFactory<SettingFactory> */
+    use HasFactory, SoftDeletes;
 }

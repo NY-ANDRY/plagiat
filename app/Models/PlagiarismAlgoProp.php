@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use Database\Factories\PlagiarismAlgoPropFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PlagiarismAlgoProp extends Model
 {
-    use SoftDeletes;
+    /** @use HasFactory<PlagiarismAlgoPropFactory> */
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'plagiarism_id',

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Database\Factories\FileExtensionFactory;
+use Database\Factories\SubmissionFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable(['exam_id', 'student_id', 'url_file', 'file_extension', 'file_filename'])]
 class Submission extends Model
 {
-    /** @use HasFactory<FileExtensionFactory> */
+    /** @use HasFactory<SubmissionFactory> */
     use HasFactory, SoftDeletes;
 
     public function exam(): BelongsTo

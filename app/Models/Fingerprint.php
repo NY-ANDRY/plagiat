@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use Database\Factories\FingerprintFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Fingerprint extends Model
 {
-    use SoftDeletes;
+    /** @use HasFactory<FingerprintFactory> */
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'submission_id',

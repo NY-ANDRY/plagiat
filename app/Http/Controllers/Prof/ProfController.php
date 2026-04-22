@@ -39,7 +39,7 @@ class ProfController extends Controller
         }
 
         $restriction = $this->getRestriction($request);
-        if (! empty($restriction)) {
+        if (!empty($restriction)) {
             $exam->fileRestrictions()->sync($restriction);
         }
 
@@ -106,6 +106,11 @@ class ProfController extends Controller
         $quote = Inspiring::quote();
 
         return view('prof.exam.details', compact('quote', 'submissions', 'exam'));
+    }
+
+    public function checkPlagiarism($id, Request $request): RedirectResponse
+    {
+        return back();
     }
 
     public function student(): View

@@ -78,7 +78,7 @@
                 @foreach ($exam->submissions as $submission)
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
-                            <img src="{{ $submission->student->imageUrl() }}" class="w-8 mask mask-decagon" alt="">
+                            <img src="{{ $submission->student->imageUrl() }}" class="min-w-8 min-h-8 max-w-8 max-h-8 w-8 h-8 mask mask-decagon" alt="">
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-medium text-neutral-800">
                                     {{ $submission->student->name }}

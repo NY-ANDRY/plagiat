@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Database\Factories\RoleUserFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RoleUser extends Pivot
 {
-    use SoftDeletes;
+    /** @use HasFactory<RoleUserFactory> */
+    use HasFactory, SoftDeletes;
 
     protected $table = 'role_user';
 

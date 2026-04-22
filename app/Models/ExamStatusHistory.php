@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Database\Factories\ExamStatusHistoryFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class ExamStatusHistory extends Pivot
 {
+    /** @use HasFactory<ExamStatusHistoryFactory> */
+    use HasFactory;
     protected $table = 'exam_statut_history';
 
     public $incrementing = true;
