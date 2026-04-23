@@ -7,6 +7,8 @@ use App\Interface\IPlagiarismResults;
 use App\Interface\IProject;
 use App\Interface\IProjects;
 use App\Models\Algo;
+use App\Models\FileExtension;
+use App\Models\FileRestriction;
 use File;
 
 class PlagiarismChecker
@@ -22,7 +24,7 @@ class PlagiarismChecker
         $this->jaccardService = new JaccardService();
     }
 
-    public function compare(IProjects $projects, Algo $algo, array $algoProps): IPlagiarismResults
+    public function compare(IProjects $projects, string $algo, array $algoProps): IPlagiarismResults
     {
         $result = $this->clean($projects);
 
@@ -45,15 +47,10 @@ class PlagiarismChecker
     public function clean(IProjects $projects): IProjects
     {
         foreach ($projects->getProjects() as $project) {
-            $rawData = $this->cleaningService->clean($project, $projects->getExtensions(), $projects->getRestrictions());
+            $rawData = $this->cleaningService->cleanProject($project, $projects->getExtensions(), $projects->getRestrictions());
             $project->setRawContent($rawData);
         }
         return $projects;
-    }
-
-    public function saveRawData()
-    {
-
     }
 
 }

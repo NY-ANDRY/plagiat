@@ -4,6 +4,7 @@
         <!-- <div class="box b-l h-full flex items-center">abc</div> -->
     </div>
     <div class="flex items-center justify-center min-h-full">
+        {{ $test }}
         <span class="loading loading-bars loading-xl"></span>
     </div>
 </div>

@@ -7,11 +7,13 @@ use Illuminate\View\Component;
 class View extends Component
 {
     public $idExam;
-    // public $exam;
+    public $test;
 
     public function __construct($idExam = null)
     {
         $this->idExam = $idExam;
+        $a = "hoho";
+        $this->test = "test{$a}";
     }
 
     public function render()

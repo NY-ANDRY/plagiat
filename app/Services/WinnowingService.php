@@ -16,6 +16,7 @@ class WinnowingService
 
     public function compare(IProjects $projects, array $algoProps): IPlagiarismResults
     {
-        return $projects->getResultType();
+        $result = $projects->getResultType();
+        return $result;
     }
 }
