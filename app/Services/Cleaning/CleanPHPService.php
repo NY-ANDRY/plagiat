@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Cleaning;
 
 class CleanPHPService
 {
-
-
     private array $comments = [
-        ['begin' => '//', 'end' => '\n'],
-        ['begin' => '/*', 'end' => '*/']
+        ['begin' => '//', 'end' => "\n"],
+        ['begin' => '/*', 'end' => '*/'],
     ];
+
     private string $varName = 'var';
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function clean($text): string
     {
@@ -23,6 +20,7 @@ class CleanPHPService
         $text = $this->renameVars($text);
         $text = strtolower($text);
         $text = preg_replace('/\s+/', '', $text);
+
         return $text;
     }
 
@@ -63,15 +61,16 @@ class CleanPHPService
     }
 
     // \s matches any whitespace character (spaces, tabs, newlines, etc.)
-    function isWhitespace(string $str): bool
+    public function isWhitespace(string $str): bool
     {
         return preg_match('/^\s*$/', $str) === 1;
     }
 
     public function renameVarsRegex($text): string
     {
-        $pattern = '/\b(\$[a-zA-Z_][a-zA-Z0-9_]*)\b/';
-        $replacement = $this->varName;
+        $pattern = '/\$[a-zA-Z_][a-zA-Z0-9_]*/';
+        $replacement = '$'.$this->varName;
+
         return preg_replace($pattern, $replacement, $text);
     }
 
@@ -80,6 +79,7 @@ class CleanPHPService
         foreach ($this->comments as $comment) {
             $text = $this->rmComment($text, $comment['begin'], $comment['end']);
         }
+
         return $text;
     }
 

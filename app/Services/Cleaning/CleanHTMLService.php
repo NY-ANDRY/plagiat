@@ -1,23 +1,21 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Cleaning;
 
 class CleanHTMLService
 {
-
     private array $comments = [
-        ['begin' => '<!--', 'end' => '-->']
+        ['begin' => '<!--', 'end' => '-->'],
     ];
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function clean($text): string
     {
         $text = strtolower($text);
         $text = preg_replace('/\s+/', '', $text);
         $text = $this->rmCommentMulti($text);
+
         return $text;
     }
 
@@ -26,6 +24,7 @@ class CleanHTMLService
         foreach ($this->comments as $comment) {
             $text = $this->rmComment($text, $comment['begin'], $comment['end']);
         }
+
         return $text;
     }
 
