@@ -20,12 +20,6 @@ class Fingerprint extends Model
         'position',
     ];
 
-    public function __construct(string $hashValue, int $position)
-    {
-        $this->hash_value = $hashValue;
-        $this->position = $position;
-    }
-
     /**
      * Get the submission that owns the fingerprint.
      */

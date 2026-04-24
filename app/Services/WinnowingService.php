@@ -89,9 +89,8 @@ class WinnowingService
         $fg1 = $p1->getFingerprint();
         $fg2 = $p2->getFingerprint();
 
-
-        $fg1 = array_unique(array_map(fn($f) => $f->hash_value, $fg1));
-        $fg2 = array_unique(array_map(fn($f) => $f->hash_value, $fg2));
+        $fg1 = array_values(array_unique(array_map(fn($f) => $f->hash_value, $fg1)));
+        $fg2 = array_values(array_unique(array_map(fn($f) => $f->hash_value, $fg2)));
 
         sort($fg1);
         sort($fg2);
@@ -99,27 +98,27 @@ class WinnowingService
         $c1 = \count($fg1);
         $c2 = \count($fg2);
 
-        $p1 = 0;
-        $p2 = 0;
+        $i = 0;
+        $j = 0;
 
         $intersection = 0;
         $union = 0;
 
-        while ($p1 < $c1 && $p2 < $c2) {
-            if ($fg1[$p1] == $fg2[$p2]) {
+        while ($i < $c1 && $j < $c2) {
+            if ($fg1[$i] == $fg2[$j]) {
                 $intersection++;
-                $p1++;
-                $p2++;
-            } elseif ($fg1[$p1] < $fg2[$p2]) {
-                $p1++;
+                $i++;
+                $j++;
+            } elseif ($fg1[$i] < $fg2[$j]) {
+                $i++;
             } else {
-                $p2++;
+                $j++;
             }
             $union++;
         }
 
-        $union += $c1 - $p1;
-        $union += $c2 - $p2;
+        $union += $c1 - $i;
+        $union += $c2 - $j;
 
         if ($union <= 0) {
             return 0;

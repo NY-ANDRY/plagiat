@@ -2,14 +2,8 @@
 
 namespace App\Services;
 
-use App\Interface\IPlagiarismResult;
 use App\Interface\IPlagiarismResults;
-use App\Interface\IProject;
 use App\Interface\IProjects;
-use App\Models\Algo;
-use App\Models\FileExtension;
-use App\Models\FileRestriction;
-use File;
 
 class PlagiarismChecker
 {

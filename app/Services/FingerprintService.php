@@ -69,7 +69,10 @@ class FingerprintService
         $parts = \array_slice($hash, 0, $w);
         $min = min($parts);
 
-        $result[] = new Fingerprint($min, 0);
+        $result[] = new Fingerprint([
+            'hash_value' => $min,
+            'position' => 0,
+        ]);
 
         for ($i = 1; $i <= $length - $w; $i++) {
 
@@ -81,7 +84,10 @@ class FingerprintService
             }
 
             $min = $curMin;
-            $result[] = new Fingerprint($min, $i);
+            $result[] = new Fingerprint([
+                'hash_value' => $min,
+                'position' => $i,
+            ]);
 
         }
 
