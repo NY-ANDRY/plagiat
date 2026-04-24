@@ -34,7 +34,7 @@ class CleaningService
         $result = '';
 
         $zip = new ZipArchive;
-        if ($zip->open($project->getPathname()) !== true) {
+        if ($zip->open($project->getAbsolutePath()) !== true) {
             return $result;
         }
 

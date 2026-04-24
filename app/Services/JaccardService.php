@@ -14,8 +14,10 @@ class JaccardService
         $this->fingerprintService = new FingerprintService();
     }
 
-    public function compare(IProjects $projects, array $algoProps): IPlagiarismResults
+    public function process(IProjects $projects): IPlagiarismResults
     {
+        $props = $projects->getAlgoProps();
+
         return $projects->getResultType();
     }
 }

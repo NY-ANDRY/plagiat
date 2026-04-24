@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -26,6 +25,7 @@ return new class extends Migration
 
             $table->foreignId('algo_id')->constrained('algos')->cascadeOnDelete();
             $table->string('name');
+            $table->string('about');
 
             $table->softDeletes();
             $table->timestamps();
@@ -46,7 +46,7 @@ return new class extends Migration
 
             $table->foreignId('submission_id')->constrained('submissions')->cascadeOnDelete();
             $table->foreignId('raw_project_id')->constrained('raw_projects')->cascadeOnDelete();
-            $table->unsignedBigInteger('hash_value')->index();
+            $table->string('hash_value', 32)->index();
             $table->unsignedInteger('position');
 
             $table->softDeletes();

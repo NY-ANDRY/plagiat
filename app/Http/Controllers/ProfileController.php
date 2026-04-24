@@ -12,6 +12,17 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+
+    /**
+     * Display the user's profile form.
+     */
+    public function dasboard(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+        $role = $user->roles->first();
+        return redirect($role->name);
+    }
+
     /**
      * Display the user's profile form.
      */

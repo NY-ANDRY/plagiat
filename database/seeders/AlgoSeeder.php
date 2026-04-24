@@ -18,8 +18,8 @@ class AlgoSeeder extends Seeder
         ]);
 
         $winnowing->props()->createMany([
-            ['name' => 'k-gram size'],
-            ['name' => 'window size'],
+            ['name' => 'k', 'about' => 'k-gram size'],
+            ['name' => 'w', 'about' => 'window size'],
         ]);
 
         $jaccard = Algo::create([
@@ -28,8 +28,8 @@ class AlgoSeeder extends Seeder
         ]);
 
         $jaccard->props()->createMany([
-            ['name' => 'hash count'],
-            ['name' => 'bit array size'],
+            ['name' => 'c', 'about' => 'hash count'],
+            ['name' => 's', 'about' => 'bit array size'],
         ]);
     }
 }

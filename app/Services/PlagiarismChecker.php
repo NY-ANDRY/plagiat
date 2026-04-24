@@ -24,17 +24,18 @@ class PlagiarismChecker
         $this->jaccardService = new JaccardService();
     }
 
-    public function compare(IProjects $projects, string $algo, array $algoProps): IPlagiarismResults
+    public function compare(IProjects $projects): IPlagiarismResults
     {
         $result = $this->clean($projects);
+        $algo = $projects->getAlgo();
 
-        switch (strtoupper($algo)) {
+        switch (strtoupper($algo->name)) {
             case 'WINNOWING':
-                $result = $this->winnowingService->compare($projects, $algoProps);
+                $result = $this->winnowingService->process($projects);
                 break;
 
             case 'JACCARD':
-                $result = $this->jaccardService->compare($projects, $algoProps);
+                $result = $this->jaccardService->process($projects);
                 break;
 
             default:

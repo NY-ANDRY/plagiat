@@ -6,6 +6,7 @@ class CleanPHPService
 {
     private array $comments = [
         ['begin' => '//', 'end' => "\n"],
+        ['begin' => '#', 'end' => "\n"],
         ['begin' => '/*', 'end' => '*/'],
     ];
 
