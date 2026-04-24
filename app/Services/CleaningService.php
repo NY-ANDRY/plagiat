@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Interface\IProject;
 use App\Models\FileExtension;
 use App\Models\FileRestriction;
+use App\Models\Submission;
 use App\Services\Cleaning\CleanCSSService;
 use App\Services\Cleaning\CleanHTMLService;
 use App\Services\Cleaning\CleanPHPService;
@@ -27,33 +27,33 @@ class CleaningService
 
     /**
      * @param  FileExtension[]  $extensions
-     * @param  FileRestriction[]  $restriction
+     * @param  FileRestriction[]  $restrictions
      */
-    public function cleanProject(IProject $project, array $extensions, array $restriction): string
+    public function cleanProject(Submission $submission, array $extensions, array $restrictions): string
     {
         $result = '';
 
         $zip = new ZipArchive;
-        if ($zip->open($project->getAbsolutePath()) !== true) {
+        if ($zip->open($submission->getAbsolutePath()) !== true) {
             return $result;
         }
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $stat = $zip->statIndex($i);
             $path = $stat['name'];
-            if ($stat === false || ! isset($path) || ! $this->isOk($path, $extensions, $restriction)) {
+            if ($stat === false || ! isset($path) || ! $this->isOk($path, $extensions, $restrictions)) {
                 continue;
             }
             $content = $zip->getFromName($path);
             $content = $this->cleanWithExtension($content, $this->getExtension($path));
-            $result = "{$result}{$content}";
+            $result .= $content;
         }
         $zip->close();
 
         return $result;
     }
 
-    public function cleanWithExtension(string $text, $extension): string
+    public function cleanWithExtension(string $text, string $extension): string
     {
         switch ($extension) {
             case '.html':
@@ -64,23 +64,19 @@ class CleaningService
                 return $this->cPHP->clean($text);
 
             default:
-                throw new \Exception('Unknown extension', 1);
+                throw new \Exception('Unknown extension: '.$extension, 1);
         }
     }
 
-    public function getExtension($path)
+    public function getExtension(string $path): string
     {
         $parts = explode('.', $path);
-        $result = $parts[\count($parts) - 1];
+        $result = end($parts);
 
         return ".{$result}";
     }
 
     /**
-     * true: fichier manana extension anaty extension sy tsy anaty false eo ambany
-     *
-     * false: fichier anaty restriction - fichier anaty folder anaty restriction -  folder fotsiny (miafara amin'ny /)
-     *
      * @param  FileExtension[]  $extensions
      * @param  FileRestriction[]  $restrictions
      */
@@ -101,8 +97,8 @@ class CleaningService
             return false;
         }
 
-        $okRestriction = true;
         foreach ($restrictions as $restriction) {
+            $okRestriction = true;
             switch ($restriction->fileType->name) {
                 case 'dir':
                     $okRestriction = $this->okDir($path, $restriction->name);
@@ -120,11 +116,11 @@ class CleaningService
         return true;
     }
 
-    private function okDir($path, string $restrictions): bool
+    private function okDir(string $path, string $restrictionName): bool
     {
         $parts = explode('/', $path);
         foreach ($parts as $part) {
-            if ($part == $restrictions) {
+            if ($part == $restrictionName) {
                 return false;
             }
         }
@@ -132,9 +128,9 @@ class CleaningService
         return true;
     }
 
-    private function okFile($path, string $restrictions): bool
+    private function okFile(string $path, string $restrictionName): bool
     {
-        if (str_ends_with($path, $restrictions)) {
+        if (str_ends_with($path, $restrictionName)) {
             return false;
         }
 

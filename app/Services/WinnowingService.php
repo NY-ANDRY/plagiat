@@ -2,10 +2,9 @@
 
 namespace App\Services;
 
-use App\Interface\IPlagiarismResults;
-use App\Interface\IProject;
-use App\Interface\IProjects;
+use App\Models\Plagiarism;
 use App\Models\PlagiarismAlgoProp;
+use App\Models\Submission;
 
 class WinnowingService
 {
@@ -13,84 +12,78 @@ class WinnowingService
 
     public function __construct()
     {
-        $this->fingerprintService = new FingerprintService();
+        $this->fingerprintService = new FingerprintService;
     }
 
-    public function process(IProjects $projects): IPlagiarismResults
+    public function process(Plagiarism $plagiarism): Plagiarism
     {
-        $this->addFingerprints($projects);
-        $result = $this->compareAll($projects);
+        $this->addFingerprints($plagiarism);
+        $result = $this->compareAll($plagiarism);
 
         return $result;
     }
 
-    public function addFingerprints(IProjects $projects): void
+    public function addFingerprints(Plagiarism $plagiarism): void
     {
-        $props = $projects->getAlgoProps();
-        $k = $this->getProps($props, 'k');
-        $w = $this->getProps($props, 'w');
+        $props = $plagiarism->algoProps;
+        $k = (int) $this->getProps($props->all(), 'k');
+        $w = (int) $this->getProps($props->all(), 'w');
 
-        foreach ($projects->getProjects() as $project) {
-            $this->addFingerprint($project, $k, $w);
+        foreach ($plagiarism->exam->submissions as $submission) {
+            $this->addFingerprint($submission, $k, $w);
         }
     }
 
-    public function addFingerprint(IProject $project, $k, $w): void
+    public function addFingerprint(Submission $submission, int $k, int $w): void
     {
-        $rawContent = $project->getRawContent();
+        $rawContent = $submission->getRawContent();
 
         $fingerprint = $this->fingerprintService->separate($rawContent, $k);
         $fingerprint = $this->fingerprintService->hash($fingerprint);
         $fingerprint = $this->fingerprintService->reduce($fingerprint, $w);
 
-        $project->setFingerprint($fingerprint);
+        $submission->setFingerprintsList($fingerprint);
     }
 
-    public function compareAll(IProjects $projects): IPlagiarismResults
+    public function compareAll(Plagiarism $plagiarism): Plagiarism
     {
-        $result = $projects->getResultType();
-        $prjs = $projects->getProjects();
-        $count = \count($prjs);
+        $submissions = $plagiarism->exam->submissions;
+        $count = $submissions->count();
 
-        $results = [];
+        $totalSimilarity = 0;
+        $comparisonCount = 0;
+
         for ($i = 0; $i < $count; $i++) {
             for ($j = $i + 1; $j < $count; $j++) {
-                $res = $result->getResultType();
-                $res->setProject1($prjs[$i]);
-                $res->setProject2($prjs[$j]);
+                $s1 = $submissions[$i];
+                $s2 = $submissions[$j];
 
-                $similarity = $this->compare($prjs[$i], $prjs[$j]);
-                $res->setSimilarity($similarity);
+                $similarity = $this->compare($s1, $s2);
 
-                $results[] = $res;
+                $plagiarism->results()->create([
+                    'submission_1_id' => $s1->id,
+                    'submission_2_id' => $s2->id,
+                    'rate' => $similarity,
+                ]);
+
+                $totalSimilarity += $similarity;
+                $comparisonCount++;
             }
         }
-        $result->setResults($results);
-        $average = 0;
-        foreach ($results as $res) {
-            $average += $res->getSimilarity();
-        }
 
-        $count = \count($results);
+        $average = $comparisonCount > 0 ? $totalSimilarity / $comparisonCount : 0;
+        $plagiarism->update(['rate' => $average]);
 
-        if ($count > 0) {
-            $average /= $count;
-        } else {
-            $average = 0;
-        }
-
-        $result->setSimilarity($average);
-
-        return $result;
+        return $plagiarism;
     }
 
-    public function compare(IProject $p1, IProject $p2): float
+    public function compare(Submission $s1, Submission $s2): float
     {
-        $fg1 = $p1->getFingerprint();
-        $fg2 = $p2->getFingerprint();
+        $fg1 = $s1->getFingerprintsList();
+        $fg2 = $s2->getFingerprintsList();
 
-        $fg1 = array_values(array_unique(array_map(fn($f) => $f->hash_value, $fg1)));
-        $fg2 = array_values(array_unique(array_map(fn($f) => $f->hash_value, $fg2)));
+        $fg1 = array_values(array_unique(array_map(fn ($f) => $f->hash_value, $fg1)));
+        $fg2 = array_values(array_unique(array_map(fn ($f) => $f->hash_value, $fg2)));
 
         sort($fg1);
         sort($fg2);
@@ -128,18 +121,16 @@ class WinnowingService
     }
 
     /**
-     * @param PlagiarismAlgoProp[] $props
+     * @param  PlagiarismAlgoProp[]  $props
      */
-    public function getProps(array $props, $name): string
+    public function getProps(array $props, string $name): string
     {
-        $result = '';
-
         foreach ($props as $prop) {
             if ($prop->algoProp->name == $name) {
                 return $prop->value;
             }
         }
 
-        return $result;
+        return '';
     }
 }

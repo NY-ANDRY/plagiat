@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 #[Fillable(['exam_id', 'student_id', 'url_file', 'file_extension', 'file_filename'])]
 class Submission extends Model
@@ -62,5 +63,31 @@ class Submission extends Model
     public function plagiarismResults2(): HasMany
     {
         return $this->hasMany(PlagiarismResult::class, 'submission_2_id');
+    }
+
+    public function getAbsolutePath(): string
+    {
+        return Storage::disk('public')->path($this->url_file);
+    }
+
+    public function getRawContent(): string
+    {
+        return $this->rawProject?->content ?? '';
+    }
+
+    public function setRawContent(string $rawContent): void
+    {
+        $this->rawProject()->updateOrCreate([], ['content' => $rawContent]);
+    }
+
+    public function getFingerprintsList(): array
+    {
+        return $this->fingerprints->all();
+    }
+
+    public function setFingerprintsList(array $fingerprints): void
+    {
+        $this->fingerprints()->delete();
+        $this->fingerprints()->saveMany($fingerprints);
     }
 }

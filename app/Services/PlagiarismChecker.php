@@ -2,50 +2,53 @@
 
 namespace App\Services;
 
-use App\Interface\IPlagiarismResults;
-use App\Interface\IProjects;
+use App\Models\Plagiarism;
 
 class PlagiarismChecker
 {
     private CleaningService $cleaningService;
+
     private WinnowingService $winnowingService;
+
     private JaccardService $jaccardService;
 
     public function __construct()
     {
-        $this->cleaningService = new CleaningService();
-        $this->winnowingService = new WinnowingService();
-        $this->jaccardService = new JaccardService();
+        $this->cleaningService = new CleaningService;
+        $this->winnowingService = new WinnowingService;
+        $this->jaccardService = new JaccardService;
     }
 
-    public function compare(IProjects $projects): IPlagiarismResults
+    public function compare(Plagiarism $plagiarism): Plagiarism
     {
-        $result = $this->clean($projects);
-        $algo = $projects->getAlgo();
+        $this->clean($plagiarism);
+        $algo = $plagiarism->algo;
 
         switch (strtoupper($algo->name)) {
             case 'WINNOWING':
-                $result = $this->winnowingService->process($projects);
+                $plagiarism = $this->winnowingService->process($plagiarism);
                 break;
 
             case 'JACCARD':
-                $result = $this->jaccardService->process($projects);
+                $plagiarism = $this->jaccardService->process($plagiarism);
                 break;
 
             default:
                 throw new \Exception('Unknown algorithm');
         }
 
-        return $result;
+        return $plagiarism;
     }
 
-    public function clean(IProjects $projects): IProjects
+    public function clean(Plagiarism $plagiarism): void
     {
-        foreach ($projects->getProjects() as $project) {
-            $rawData = $this->cleaningService->cleanProject($project, $projects->getExtensions(), $projects->getRestrictions());
-            $project->setRawContent($rawData);
-        }
-        return $projects;
-    }
+        $exam = $plagiarism->exam;
+        $extensions = $exam->fileExtensions;
+        $restrictions = $exam->fileRestrictions;
 
+        foreach ($exam->submissions as $submission) {
+            $rawData = $this->cleaningService->cleanProject($submission, $extensions->all(), $restrictions->all());
+            $submission->setRawContent($rawData);
+        }
+    }
 }

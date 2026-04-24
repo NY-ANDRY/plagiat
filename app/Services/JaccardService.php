@@ -2,8 +2,7 @@
 
 namespace App\Services;
 
-use App\Interface\IPlagiarismResults;
-use App\Interface\IProjects;
+use App\Models\Plagiarism;
 
 class JaccardService
 {
@@ -11,13 +10,12 @@ class JaccardService
 
     public function __construct()
     {
-        $this->fingerprintService = new FingerprintService();
+        $this->fingerprintService = new FingerprintService;
     }
 
-    public function process(IProjects $projects): IPlagiarismResults
+    public function process(Plagiarism $plagiarism): Plagiarism
     {
-        $props = $projects->getAlgoProps();
-
-        return $projects->getResultType();
+        // To be implemented
+        return $plagiarism;
     }
 }
