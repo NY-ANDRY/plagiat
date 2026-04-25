@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plagiarism;
 use App\Models\PlagiarismResult;
 use App\Models\Submission;
 use App\Services\ZipService;
@@ -13,43 +12,63 @@ use Illuminate\View\View;
 
 class SubmissionController extends Controller
 {
-
     public function compare(PlagiarismResult $pr, Request $request): View
     {
         $submission1 = $pr->submission1;
         $submission2 = $pr->submission2;
+
         $this->canReadSubmission($submission1, $request);
         $this->canReadSubmission($submission2, $request);
 
-        if (! $request->has('file')) {
+        if (!$request->has('file')) {
             $previous = url()->previous();
-            if (! str_contains($previous, $request->path())) {
+            if (!str_contains($previous, $request->path())) {
                 session(['previous_url' => $previous]);
             }
         }
 
         $user = $request->user();
 
-        $code = null;
-        $language = 'plaintext';
-        $structure = [];
-        $mediaType = null;
-        $mediaData = null;
-        $flatFiles = [];
+        $code1 = null;
+        $language1 = 'plaintext';
+        $mediaType1 = null;
+        $mediaData1 = null;
 
-        $zipPath = Storage::disk('public')->path($submission1->url_file);
-        $structure = ZipService::getStructure($zipPath);
+        $code2 = null;
+        $language2 = 'plaintext';
+        $mediaType2 = null;
+        $mediaData2 = null;
 
-        $flatFiles = Arr::flatten($structure);
+        $zipPath1 = Storage::disk('public')->path($submission1->url_file);
+        $structure1 = ZipService::getStructure($zipPath1);
+        $flatFiles1 = Arr::flatten($structure1);
 
-        if ($request->has('file') && in_array($request->query('file'), $flatFiles)) {
-            $requestedFile = $request->query('file');
+        $zipPath2 = Storage::disk('public')->path($submission2->url_file);
+        $structure2 = ZipService::getStructure($zipPath2);
+        $flatFiles2 = Arr::flatten($structure2);
 
-            $fileInfo = ZipService::getFileContentAndLanguage($zipPath, $requestedFile);
-            $code = $fileInfo['code'];
-            $language = $fileInfo['language'];
-            $mediaType = $fileInfo['mediaType'];
-            $mediaData = $fileInfo['mediaData'];
+        if ($request->has('file')) {
+            $requestedFile1 = $request->query('file');
+
+            if (in_array($requestedFile1, $flatFiles1)) {
+                $fileInfo1 = ZipService::getFileContentAndLanguage($zipPath1, $requestedFile1);
+                $code1 = $fileInfo1['code'];
+                $language1 = $fileInfo1['language'];
+                $mediaType1 = $fileInfo1['mediaType'];
+                $mediaData1 = $fileInfo1['mediaData'];
+            }
+        }
+
+        if ($request->has('file2')) {
+            $requestedFile2 = $request->query('file2');
+
+            if (in_array($requestedFile2, $flatFiles2)) {
+                $fileInfo2 = ZipService::getFileContentAndLanguage($zipPath2, $requestedFile2);
+                $code2 = $fileInfo2['code'];
+                $language2 = $fileInfo2['language'];
+                $mediaType2 = $fileInfo2['mediaType'];
+                $mediaData2 = $fileInfo2['mediaData'];
+            }
         }
 
         $fallbackUrl = route('dashboard');
@@ -61,15 +80,31 @@ class SubmissionController extends Controller
 
         $backUrl = session('previous_url', $fallbackUrl);
 
-        return view('submission.read', compact('submission', 'code', 'language', 'structure', 'mediaType', 'mediaData', 'backUrl'));
+        return view('submission.plagiarism', compact(
+            'submission1',
+            'submission2',
+            'code1',
+            'language1',
+            'mediaType1',
+            'mediaData1',
+            'code2',
+            'language2',
+            'mediaType2',
+            'mediaData2',
+            'structure1',
+            'structure2',
+            'backUrl',
+            'pr'
+        ));
     }
+
     public function read(Submission $submission, Request $request): View
     {
         $this->canReadSubmission($submission, $request);
 
-        if (! $request->has('file')) {
+        if (!$request->has('file')) {
             $previous = url()->previous();
-            if (! str_contains($previous, $request->path())) {
+            if (!str_contains($previous, $request->path())) {
                 session(['previous_url' => $previous]);
             }
         }
@@ -118,7 +153,7 @@ class SubmissionController extends Controller
 
         return response()->download(
             $zipPath,
-            $submission->file_filename.'.'.$submission->file_extension
+            $submission->file_filename . '.' . $submission->file_extension
         );
     }
 
@@ -135,7 +170,7 @@ class SubmissionController extends Controller
             $authorized = true;
         }
 
-        if (! $authorized) {
+        if (!$authorized) {
             abort(403, 'Unauthorized access to submission.');
         }
     }

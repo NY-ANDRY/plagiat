@@ -45,7 +45,7 @@
                     {{ $result->rate * 100 . "%" }}
                 </div>
 
-                <a href="#" class="box activable h-full flex-1 flex items-center justify-center">
+                <a href="{{ route('submission.plagiarism', $result) }}" class="box activable h-full flex-1 flex items-center justify-center">
                     <x-lucide-scan-eye class="w-6 text-neutral-400" />
                 </a>
             </div>

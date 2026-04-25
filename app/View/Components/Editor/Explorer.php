@@ -14,14 +14,17 @@ class Explorer extends Component
 
     public $currentPath;
 
+    public $secondary;
+
     /**
      * Create a new component instance.
      */
-    public function __construct($structure, $isRoot = true, $currentPath = '')
+    public function __construct($structure, $isRoot = true, $currentPath = '', $secondary = false)
     {
         $this->structure = $structure;
         $this->isRoot = $isRoot;
         $this->currentPath = $currentPath;
+        $this->secondary = $secondary;
     }
 
     /**

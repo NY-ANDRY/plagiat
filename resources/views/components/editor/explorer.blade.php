@@ -1,5 +1,5 @@
 @php
-    $requestedFile = request()->query('file');
+    $requestedFile = $secondary ? request()->query('file2') : request()->query('file');
 @endphp
 
 <ul @if($isRoot) class="menu w-full" @endif>
@@ -15,16 +15,24 @@
                         <x-lucide-folder class="w-4 h-4 mr-1 inline-block" />
                         <span class="truncate">{{ $name }}</span>
                     </summary>
-                    <x-editor.explorer :structure="$item" :isRoot="false" :currentPath="$folderPath" />
+                    <x-editor.explorer :structure="$item" :isRoot="false" :currentPath="$folderPath" :secondary="$secondary" />
                 </details>
             </li>
         @else
             <li>
-                <a href="{{ request()->fullUrlWithQuery(['file' => $item]) }}"
-                    class="{{ request()->query('file') === $item ? 'bg-base-200 font-bold active' : '' }}">
-                    <x-lucide-file class="w-4 h-4 mr-1 inline-block" />
-                    <span class="truncate" title="{{ $name }}">{{ $name }}</span>
-                </a>
+                @if (!$secondary)
+                    <a href="{{ request()->fullUrlWithQuery(['file' => $item]) }}"
+                        class="{{ request()->query('file') === $item ? 'bg-base-200 font-bold active' : '' }}">
+                        <x-lucide-file class="w-4 h-4 mr-1 inline-block" />
+                        <span class="truncate" title="{{ $name }}">{{ $name }}</span>
+                    </a>
+                @else
+                    <a href="{{ request()->fullUrlWithQuery(['file2' => $item]) }}"
+                        class="{{ request()->query('file2') === $item ? 'bg-base-200 font-bold active' : '' }}">
+                        <x-lucide-file class="w-4 h-4 mr-1 inline-block" />
+                        <span class="truncate" title="{{ $name }}">{{ $name }}</span>
+                    </a>
+                @endif
             </li>
         @endif
     @endforeach
