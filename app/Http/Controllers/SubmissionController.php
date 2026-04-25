@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plagiarism;
+use App\Models\PlagiarismResult;
 use App\Models\Submission;
 use App\Services\ZipService;
 use Illuminate\Http\Request;
@@ -11,6 +13,56 @@ use Illuminate\View\View;
 
 class SubmissionController extends Controller
 {
+
+    public function compare(PlagiarismResult $pr, Request $request): View
+    {
+        $submission1 = $pr->submission1;
+        $submission2 = $pr->submission2;
+        $this->canReadSubmission($submission1, $request);
+        $this->canReadSubmission($submission2, $request);
+
+        if (! $request->has('file')) {
+            $previous = url()->previous();
+            if (! str_contains($previous, $request->path())) {
+                session(['previous_url' => $previous]);
+            }
+        }
+
+        $user = $request->user();
+
+        $code = null;
+        $language = 'plaintext';
+        $structure = [];
+        $mediaType = null;
+        $mediaData = null;
+        $flatFiles = [];
+
+        $zipPath = Storage::disk('public')->path($submission1->url_file);
+        $structure = ZipService::getStructure($zipPath);
+
+        $flatFiles = Arr::flatten($structure);
+
+        if ($request->has('file') && in_array($request->query('file'), $flatFiles)) {
+            $requestedFile = $request->query('file');
+
+            $fileInfo = ZipService::getFileContentAndLanguage($zipPath, $requestedFile);
+            $code = $fileInfo['code'];
+            $language = $fileInfo['language'];
+            $mediaType = $fileInfo['mediaType'];
+            $mediaData = $fileInfo['mediaData'];
+        }
+
+        $fallbackUrl = route('dashboard');
+        if ($user->hasRole('prof')) {
+            $fallbackUrl = route('prof.exams.show', $submission1->exam_id);
+        } elseif ($user->hasRole('student')) {
+            $fallbackUrl = route('student.exam', $submission1->exam_id);
+        }
+
+        $backUrl = session('previous_url', $fallbackUrl);
+
+        return view('submission.read', compact('submission', 'code', 'language', 'structure', 'mediaType', 'mediaData', 'backUrl'));
+    }
     public function read(Submission $submission, Request $request): View
     {
         $this->canReadSubmission($submission, $request);

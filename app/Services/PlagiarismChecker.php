@@ -19,7 +19,7 @@ class PlagiarismChecker
         $this->jaccardService = new JaccardService;
     }
 
-    public function compare(Plagiarism $plagiarism): Plagiarism
+    public function check(Plagiarism $plagiarism): Plagiarism
     {
         $this->clean($plagiarism);
         $algo = $plagiarism->algo;

@@ -86,6 +86,10 @@ h3 {
     @apply px-6 py-4;
 }
 
+.box-sm {
+    @apply px-4 py-2 text-sm;
+}
+
 .b-t {
     @apply border-t border-neutral-200;
 }

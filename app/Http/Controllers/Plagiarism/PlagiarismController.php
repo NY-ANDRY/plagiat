@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Plagiarism;
 
-use App\Models\Algo;
+use App\Http\Controllers\Controller;
+use App\Jobs\PlagiarismCheckProcess;
 use App\Models\AlgoProp;
 use App\Models\Plagiarism;
-use App\Services\PlagiarismChecker;
+use App\Models\PlagiarismStatut;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -21,6 +22,8 @@ class PlagiarismController extends Controller
             'algo_id' => $algoId,
             'exam_id' => $examId
         ]);
+        $processingStatus = PlagiarismStatut::where('name', 'pending')->firstOrCreate(['name' => 'pending']);
+        $plagiarism->statuses()->syncWithoutDetaching([$processingStatus->id]);
 
         $props = AlgoProp::where('algo_id', '=', $algoId)->get();
 
@@ -33,8 +36,7 @@ class PlagiarismController extends Controller
             ]);
         }
 
-        $checker = new PlagiarismChecker();
-        $checker->compare($plagiarism);
+        PlagiarismCheckProcess::dispatch($plagiarism->id);
 
         return back();
     }

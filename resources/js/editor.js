@@ -1,15 +1,5 @@
 import * as monaco from 'monaco-editor';
 
-// ❌ désactive totalement les workers
-self.MonacoEnvironment = {
-    getWorker: () => {
-        return {
-            postMessage: () => {},
-            terminate: () => {}
-        };
-    }
-};
-
 window.initEditor = () => {
     const config = window.editorConfig || {};
 

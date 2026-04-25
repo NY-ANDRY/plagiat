@@ -92,7 +92,7 @@ return new class extends Migration {
             $table->id();
 
             $table->string('name');
-            $table->string('about');
+            $table->string('about')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

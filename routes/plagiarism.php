@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\PlagiarismController;
+use App\Http\Controllers\Plagiarism\PlagiarismController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:prof'])->group(function () {
