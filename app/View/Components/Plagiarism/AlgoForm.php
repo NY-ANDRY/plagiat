@@ -2,36 +2,34 @@
 
 namespace App\View\Components\Plagiarism;
 
+use App\Models\Algo as AlgoModel;
 use App\Models\Exam;
-use App\Models\Plagiarism;
 use Illuminate\View\Component;
 
-class View extends Component
+class AlgoForm extends Component
 {
     public $idExam;
-
-    public $algos;
-
     public $idAlgo;
-
-    public $plagiarism;
+    public $curAlgo;
+    public $algos;
 
     public function __construct($idExam, $idAlgo = null)
     {
         $this->idExam = $idExam;
-        $this->exam = Exam::find($idExam);
-        $this->algos = $this->exam->plagiarisms()->with('algo')->get()->pluck('algo');
         $this->idAlgo = $idAlgo;
         $this->init();
     }
 
     public function init()
     {
-        $this->plagiarism = Plagiarism::where('exam_id', '=', $this->idExam)->first();
+        $this->algos = AlgoModel::all();
+        if ($this->idAlgo != null) {
+            $this->curAlgo = AlgoModel::with(['props'])->find($this->idAlgo);
+        }
     }
 
     public function render()
     {
-        return view('components.plagiarism.view');
+        return view('components.plagiarism.algo-form');
     }
 }

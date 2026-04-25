@@ -25,9 +25,9 @@ class WinnowingService
 
     public function addFingerprints(Plagiarism $plagiarism): void
     {
-        $props = $plagiarism->algoProps;
-        $k = (int) $this->getProps($props->all(), 'k');
-        $w = (int) $this->getProps($props->all(), 'w');
+        $props = $plagiarism->algoProps->all();
+        $k = (int) $this->getProps($props, 'k');
+        $w = (int) $this->getProps($props, 'w');
 
         foreach ($plagiarism->exam->submissions as $submission) {
             $this->addFingerprint($submission, $k, $w);

@@ -11,6 +11,7 @@ class ExamStatusHistory extends Pivot
 {
     /** @use HasFactory<ExamStatusHistoryFactory> */
     use HasFactory;
+
     protected $table = 'exam_statut_history';
 
     public $incrementing = true;

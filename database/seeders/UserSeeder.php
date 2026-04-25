@@ -37,5 +37,19 @@ class UserSeeder extends Seeder
             ['name' => 'User C', 'password' => Hash::make('cccccccc')]
         );
         $userC->roles()->syncWithoutDetaching([$studentRole->id]);
+
+        // User D
+        $userD = User::updateOrCreate(
+            ['email' => 'd@gmail.com'],
+            ['name' => 'User D', 'password' => Hash::make('dddddddd')]
+        );
+        $userD->roles()->syncWithoutDetaching([$studentRole->id]);
+
+        // User E
+        $userE = User::updateOrCreate(
+            ['email' => 'e@gmail.com'],
+            ['name' => 'User E', 'password' => Hash::make('eeeeeeee')]
+        );
+        $userE->roles()->syncWithoutDetaching([$studentRole->id]);
     }
 }

@@ -104,13 +104,9 @@ class ProfController extends Controller
         $submissions = Submission::where('exam_id', '=', $id)->orderBy('created_at')->get();
         $exam = Exam::find($id);
         $quote = Inspiring::quote();
+        $idAlgo = $request->query('algo');
 
-        return view('prof.exam.details', compact('quote', 'submissions', 'exam'));
-    }
-
-    public function checkPlagiarism($id, Request $request): RedirectResponse
-    {
-        return back();
+        return view('prof.exam.details', compact('quote', 'submissions', 'exam', 'idAlgo'));
     }
 
     public function student(): View

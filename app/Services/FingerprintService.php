@@ -7,8 +7,6 @@ use App\Models\Fingerprint;
 class FingerprintService
 {
     /**
-     * @param string $text
-     * @param int $k
      * @return string[]
      */
     public function separate(string $text, int $k): array
@@ -30,10 +28,11 @@ class FingerprintService
     /**
      * if $text string -> hash the strng
      * if $test string[] -> hash each string
-     * 
-     * @param string|string[] $text
-     * @throws \Exception
+     *
+     * @param  string|string[]  $text
      * @return string|string[]
+     *
+     * @throws \Exception
      */
     public function hash(string|array $text): string|array
     {
@@ -43,8 +42,8 @@ class FingerprintService
 
         $result = [];
         foreach ($text as $value) {
-            if (!\is_string($value)) {
-                throw new \Exception("only string or array of string accepted");
+            if (! \is_string($value)) {
+                throw new \Exception('only string or array of string accepted');
             }
             $result[] = md5($value);
         }
@@ -53,8 +52,7 @@ class FingerprintService
     }
 
     /**
-     * @param string[] $hash
-     * @param int $w
+     * @param  string[]  $hash
      * @return Fingerprint[]
      */
     public function reduce(array $hash, int $w): array
@@ -93,5 +91,4 @@ class FingerprintService
 
         return $result;
     }
-
 }

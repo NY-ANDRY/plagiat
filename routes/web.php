@@ -14,25 +14,29 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/admin', fn () => 'Bienvenue sur l’espace admin')
+    Route::get('/admin', fn() => 'Bienvenue sur l’espace admin')
         ->middleware('role:admin')
         ->name('admin.dashboard');
 });
 
 Route::prefix('auth')->group(function () {
-    require __DIR__.'/auth.php';
+    require __DIR__ . '/auth.php';
 });
 
 Route::prefix('prof')->group(function () {
-    require __DIR__.'/prof.php';
+    require __DIR__ . '/prof.php';
 });
 
 Route::prefix('student')->group(function () {
-    require __DIR__.'/student.php';
+    require __DIR__ . '/student.php';
 });
 
 Route::prefix('submission')->group(function () {
-    require __DIR__.'/submission.php';
+    require __DIR__ . '/submission.php';
+});
+
+Route::prefix('plagiarism')->group(function () {
+    require __DIR__ . '/plagiarism.php';
 });
 
 // /// test

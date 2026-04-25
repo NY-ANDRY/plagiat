@@ -2,14 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Algo;
-use App\Models\AlgoProp;
+use App\Models\PlagiarismStatut;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<AlgoProp>
+ * @extends Factory<PlagiarismStatut>
  */
-class AlgoPropFactory extends Factory
+class PlagiarismStatutFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,10 +18,8 @@ class AlgoPropFactory extends Factory
     public function definition(): array
     {
         return [
-            'algo_id' => Algo::factory(),
             'name' => $this->faker->word(),
             'about' => $this->faker->sentence(),
-            'default_value' => $this->faker->word(),
         ];
     }
 }

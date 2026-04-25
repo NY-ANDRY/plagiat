@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->foreignId('algo_id')->constrained('algos')->cascadeOnDelete();
             $table->string('name');
             $table->string('about');
+            $table->string('default_value')->nullable();
 
             $table->softDeletes();
             $table->timestamps();
@@ -86,6 +87,26 @@ return new class extends Migration {
             $table->softDeletes();
             $table->timestamps();
         });
+
+        Schema::create('plagiarism_statuts', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('name');
+            $table->string('about');
+
+            $table->softDeletes();
+            $table->timestamps();
+        });
+
+        Schema::create('plagiarism_statuts_history', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('plagiarism_id')->constrained('plagiarisms')->cascadeOnDelete();
+            $table->foreignId('plagiarism_statut_id')->constrained('plagiarism_statuts')->cascadeOnDelete();
+
+            $table->softDeletes();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -93,6 +114,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('plagiarism_statuts_history');
+        Schema::dropIfExists('plagiarism_statuts');
         Schema::dropIfExists('plagiarism_results');
         Schema::dropIfExists('plagiarism_algo_props');
         Schema::dropIfExists('plagiarisms');

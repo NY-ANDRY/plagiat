@@ -6,6 +6,7 @@ use Database\Factories\PlagiarismFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -50,5 +51,25 @@ class Plagiarism extends Model
     public function results(): HasMany
     {
         return $this->hasMany(PlagiarismResult::class);
+    }
+
+    /**
+     * Get the statuses associated with this plagiarism check.
+     */
+    public function statuses(): BelongsToMany
+    {
+        return $this->belongsToMany(PlagiarismStatut::class, 'plagiarism_statuts_history', 'plagiarism_id', 'plagiarism_statut_id')
+            ->using(PlagiarismStatutHistory::class)
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the current status of the plagiarism check.
+     */
+    public function currentStatus(): ?PlagiarismStatut
+    {
+        return $this->statuses()
+            ->orderByPivot('created_at', 'desc')
+            ->first();
     }
 }

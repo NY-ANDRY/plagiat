@@ -9,7 +9,6 @@ use App\Models\PlagiarismAlgoProp;
 
 interface IProjects
 {
-
     /**
      * @return IProject[]
      */
@@ -33,5 +32,4 @@ interface IProjects
      * @return PlagiarismAlgoProp[]
      */
     public function getAlgoProps(): array;
-
 }

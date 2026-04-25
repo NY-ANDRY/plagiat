@@ -87,6 +87,10 @@ class Submission extends Model
 
     public function setFingerprintsList(array $fingerprints): void
     {
+        $raw_project = $this->rawProject;
+        foreach ($fingerprints as $fingerprint) {
+           $fingerprint->raw_project_id = $raw_project->id;
+        }
         $this->fingerprints()->delete();
         $this->fingerprints()->saveMany($fingerprints);
     }

@@ -17,7 +17,8 @@ class AlgoProp extends Model
     protected $fillable = [
         'algo_id',
         'name',
-        'about'
+        'about',
+        'default_value',
     ];
 
     /**

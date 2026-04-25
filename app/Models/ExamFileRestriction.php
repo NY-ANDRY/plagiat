@@ -10,6 +10,7 @@ class ExamFileRestriction extends Pivot
 {
     /** @use HasFactory<ExamFileRestrictionFactory> */
     use HasFactory;
+
     protected $table = 'exam_file_restriction';
 
     public $incrementing = true;

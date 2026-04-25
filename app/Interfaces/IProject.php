@@ -7,16 +7,18 @@ use App\Models\Fingerprint;
 interface IProject
 {
     public function getAbsolutePath(): string;
+
     public function getRawContent(): string;
+
     public function setRawContent(string $rawContent): void;
+
     /**
      * @return Fingerprint[]
      */
     public function getFingerprint(): array;
+
     /**
-     * @param Fingerprint[] $fingerprint
-     * 
-     * @return void
+     * @param  Fingerprint[]  $fingerprint
      */
     public function setFingerprint(array $fingerprint): void;
 }

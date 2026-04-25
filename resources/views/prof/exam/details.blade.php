@@ -19,8 +19,8 @@
 
         </div>
 
-        <div class="b-r flex-1 flex flex-col h-full overflow-hidden overflow-y-auto">
-            <x-plagiarism.view :idExam="$exam" />
+        <div class="b-r flex-1 flex flex-col h-full max-h-full overflow-hidden overflow-y-auto">
+            <x-plagiarism.view :idExam="$exam->id" :idAlgo="$idAlgo" />
         </div>
 
     </div>
