@@ -56,6 +56,11 @@ class CleaningService
         return $result;
     }
 
+    /**
+     * @param  FileExtension[]  $extensions
+     * @param  string[]  $ignoreDir
+     * @param  string[]  $ignoreFile
+     */
     function processScan(string $dir, array $extensions, array $ignoreDir, array $ignoreFile): string
     {
         $result = '';
@@ -128,14 +133,13 @@ class CleaningService
 
     /**
      * @param  FileExtension[]  $extensions
-     * @param  FileExtension[]  $extensions
      * @param  string[]  $ignoreFile
      */
     public function isOk(string $path, array $extensions, array $ignoreFile): bool
     {
         $extOk = false;
         foreach ($extensions as $extension) {
-            if (str_ends_with($path, $extension['extension'])) {
+            if (str_ends_with($path, $extension->extension)) {
                 $extOk = true;
                 break;
             }

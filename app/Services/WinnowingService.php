@@ -82,8 +82,8 @@ class WinnowingService
         $fg1 = $s1->getFingerprintsList();
         $fg2 = $s2->getFingerprintsList();
 
-        $fg1 = array_values(array_unique(array_map(fn ($f) => $f->hash_value, $fg1)));
-        $fg2 = array_values(array_unique(array_map(fn ($f) => $f->hash_value, $fg2)));
+        $fg1 = array_values(array_unique(array_map(fn($f) => $f->hash_value, $fg1)));
+        $fg2 = array_values(array_unique(array_map(fn($f) => $f->hash_value, $fg2)));
 
         sort($fg1);
         sort($fg2);
