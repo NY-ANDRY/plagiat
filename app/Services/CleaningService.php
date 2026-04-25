@@ -8,6 +8,7 @@ use App\Models\Submission;
 use App\Services\Cleaning\CleanCSSService;
 use App\Services\Cleaning\CleanHTMLService;
 use App\Services\Cleaning\CleanPHPService;
+use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
 class CleaningService
@@ -38,18 +39,67 @@ class CleaningService
             return $result;
         }
 
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $stat = $zip->statIndex($i);
-            $path = $stat['name'];
-            if ($stat === false || ! isset($path) || ! $this->isOk($path, $extensions, $restrictions)) {
-                continue;
-            }
-            $content = $zip->getFromName($path);
-            $content = $this->cleanWithExtension($content, $this->getExtension($path));
-            $result .= $content;
+        $id = uniqid($submission->file_filename . '_', true);
+        $localUrl = Storage::disk('tmp')->path($id);
+        if (!$zip->extractTo($localUrl)) {
+            $zip->close();
+            return $result;
         }
         $zip->close();
 
+        $ignoreDir = $this->getRestrict($restrictions, 'dir');
+        $ignoreFile = $this->getRestrict($restrictions, 'file');
+        $result = $this->processScan($localUrl, $extensions, $ignoreDir, $ignoreFile);
+
+        Storage::disk('tmp')->deleteDirectory($id);
+
+        return $result;
+    }
+
+    function processScan(string $dir, array $extensions, array $ignoreDir, array $ignoreFile): string
+    {
+        $result = '';
+        if (!is_dir($dir)) {
+            return $result;
+        }
+
+        $items = scandir($dir);
+
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $path = $dir . DIRECTORY_SEPARATOR . $item;
+
+            if (is_dir($path) && in_array($item, $ignoreDir, true)) {
+                continue;
+            }
+
+            if (is_dir($path)) {
+                $result .= $this->processScan($path, $extensions, $ignoreDir, $ignoreFile);
+            } else if (
+                is_file($path) && is_readable($path) &&
+                $this->isOk($path, $extensions, $ignoreFile)
+            ) {
+                $result .= $this->cleanWithExtension(file_get_contents($path), $this->getExtension($path));
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @param  FileRestriction[]  $restrictions
+     * @param  string  $fileType
+     */
+    public function getRestrict(array $restrictions, string $fileType): array
+    {
+        $result = [];
+        foreach ($restrictions as $restriction) {
+            if ($restriction->fileType->name == $fileType) {
+                $result[] = $restriction->name;
+            }
+        }
         return $result;
     }
 
@@ -64,7 +114,7 @@ class CleaningService
                 return $this->cPHP->clean($text);
 
             default:
-                throw new \Exception('Unknown extension: '.$extension, 1);
+                throw new \Exception('Unknown extension: ' . $extension, 1);
         }
     }
 
@@ -78,14 +128,11 @@ class CleaningService
 
     /**
      * @param  FileExtension[]  $extensions
-     * @param  FileRestriction[]  $restrictions
+     * @param  FileExtension[]  $extensions
+     * @param  string[]  $ignoreFile
      */
-    public function isOk(string $path, array $extensions, array $restrictions): bool
+    public function isOk(string $path, array $extensions, array $ignoreFile): bool
     {
-        if (str_ends_with($path, '/')) {
-            return false;
-        }
-
         $extOk = false;
         foreach ($extensions as $extension) {
             if (str_ends_with($path, $extension['extension'])) {
@@ -93,22 +140,12 @@ class CleaningService
                 break;
             }
         }
-        if (! $extOk) {
+        if (!$extOk) {
             return false;
         }
 
-        foreach ($restrictions as $restriction) {
-            $okRestriction = true;
-            switch ($restriction->fileType->name) {
-                case 'dir':
-                    $okRestriction = $this->okDir($path, $restriction->name);
-                    break;
-
-                case 'file':
-                    $okRestriction = $this->okFile($path, $restriction->name);
-                    break;
-            }
-            if (! $okRestriction) {
+        foreach ($ignoreFile as $ignore) {
+            if (str_ends_with($path, $ignore)) {
                 return false;
             }
         }
@@ -116,24 +153,4 @@ class CleaningService
         return true;
     }
 
-    private function okDir(string $path, string $restrictionName): bool
-    {
-        $parts = explode('/', $path);
-        foreach ($parts as $part) {
-            if ($part == $restrictionName) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private function okFile(string $path, string $restrictionName): bool
-    {
-        if (str_ends_with($path, $restrictionName)) {
-            return false;
-        }
-
-        return true;
-    }
 }
