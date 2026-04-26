@@ -74,6 +74,10 @@ label {
     @apply cursor-pointer hover:bg-neutral-50 active:bg-neutral-100 transition-all;
 }
 
+.activable-red {
+    @apply cursor-pointer hover:bg-red-50 active:bg-red-100 transition-all;
+}
+
 h2 {
     @apply text-2xl font-semibold capitalize;
 }

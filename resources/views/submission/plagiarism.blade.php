@@ -4,10 +4,10 @@
         <main class="flex-1 flex flex-col overflow-hidden">
             <div class="flex flex-col h-full">
                 <div class="b-b flex items-center w-full gap-2">
-                    <a href="{{ $backUrl }}" class="box b-r flex activable">
+                    <a href="{{ $backUrl }}" class="box b-r h-full flex activable">
                         <x-lucide-arrow-left class="text-black w-6" />
                     </a>
-                    <div class="flex-1 flex items-center justify-between">
+                    <div class="flex-1 h-full flex items-center justify-between">
 
                         @if (request()->query('file'))
                             <div

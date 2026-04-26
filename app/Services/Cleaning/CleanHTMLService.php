@@ -8,7 +8,9 @@ class CleanHTMLService
         ['begin' => '<!--', 'end' => '-->'],
     ];
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function clean($text): string
     {

@@ -4,7 +4,6 @@ namespace App\View\Components\Plagiarism;
 
 use App\Models\Plagiarism;
 use App\Models\PlagiarismResult;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\Component;
 
 class Details extends Component

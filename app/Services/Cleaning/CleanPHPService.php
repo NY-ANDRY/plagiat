@@ -12,7 +12,9 @@ class CleanPHPService
 
     private string $varName = 'var';
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function clean($text): string
     {
@@ -61,16 +63,16 @@ class CleanPHPService
         return $i;
     }
 
-    // \s matches any whitespace character (spaces, tabs, newlines, etc.)
-    public function isWhitespace(string $str): bool
-    {
-        return preg_match('/^\s*$/', $str) === 1;
-    }
+    // // \s matches any whitespace character (spaces, tabs, newlines, etc.)
+    // public function isWhitespace(string $str): bool
+    // {
+    //     return preg_match('/^\s*$/', $str) === 1;
+    // }
 
     public function renameVarsRegex($text): string
     {
         $pattern = '/\$[a-zA-Z_][a-zA-Z0-9_]*/';
-        $replacement = '$'.$this->varName;
+        $replacement = '$' . $this->varName;
 
         return preg_replace($pattern, $replacement, $text);
     }

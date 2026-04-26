@@ -28,8 +28,8 @@ class AlgoSeeder extends Seeder
         ]);
 
         $jaccard->props()->createMany([
-            ['name' => 'c', 'about' => 'hash count', 'default_value' => '1'],
-            ['name' => 's', 'about' => 'bit array size', 'default_value' => '1024'],
+            ['name' => 'c', 'about' => 'hash count', 'default_value' => '5'],
+            ['name' => 's', 'about' => 'bit array size', 'default_value' => '2048'],
         ]);
     }
 }

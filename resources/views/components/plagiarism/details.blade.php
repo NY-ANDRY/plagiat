@@ -16,7 +16,13 @@
             @endforeach
         </div>
 
-        <div class="flex box-sm font-thin text-sm">{{ $plagiarism->results()->count() }}</div>
+        <div class="flex h-full font-thin text-sm">
+            <form action="{{ route('plagiarism.delete', $plagiarism) }}" method="post" class="box-sm b-l activable-red h-full text-red-500">
+                @csrf
+                @method('DELETE')
+                <input type="submit" value="delete" readonly />
+            </form>
+        </div>
     </div>
 
     <div class="flex flex-col">
@@ -45,7 +51,8 @@
                     {{ $result->rate * 100 . "%" }}
                 </div>
 
-                <a href="{{ route('submission.plagiarism', $result) }}" class="box activable h-full flex-1 flex items-center justify-center">
+                <a href="{{ route('plagiarism.view', $result) }}"
+                    class="box activable h-full flex-1 flex items-center justify-center">
                     <x-lucide-scan-eye class="w-6 text-neutral-400" />
                 </a>
             </div>
