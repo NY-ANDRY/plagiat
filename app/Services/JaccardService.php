@@ -19,14 +19,8 @@ class JaccardService
 
     public function process(Plagiarism $plagiarism): Plagiarism
     {
-        Log::info('Starting Jaccard similarity check for Plagiarism ID: '.$plagiarism->id);
-        Log::info('Add blooms begin');
         $this->addBlooms($plagiarism);
-        Log::info('Add blooms end');
-
-        Log::info('begin');
         $result = $this->compareAll($plagiarism);
-        Log::info('Add compare end');
 
         return $result;
     }
@@ -68,7 +62,7 @@ class JaccardService
         $b1 = $s1->blooms()->first();
         $b2 = $s2->blooms()->first();
 
-        if (! $b1 || ! $b2) {
+        if (!$b1 || !$b2) {
             return 0;
         }
 
@@ -107,6 +101,10 @@ class JaccardService
         $k = (int) $this->getProps($props, 'k');
         $hashCount = (int) $this->getProps($props, 'c');
         $arraySize = (int) $this->getProps($props, 's');
+
+        if ($arraySize > 10000000) { // 9.53 Mo -> ~/Projects/test/php/mem_array.php
+            $arraySize = 10000000;
+        }
 
         foreach ($plagiarism->exam->submissions as $submission) {
             $this->addBloom($submission, $k, $arraySize, $hashCount);

@@ -68,6 +68,11 @@ class Plagiarism extends Model
      */
     public function currentStatus(): ?PlagiarismStatut
     {
+        $result = $this->statuses()->where('name', 'done')->first();
+        if ($result) {
+            return $result;
+        }
+
         return $this->statuses()
             ->orderByPivot('created_at', 'desc')
             ->first();

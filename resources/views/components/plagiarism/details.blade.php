@@ -7,10 +7,12 @@
             </div>
             @foreach ($plagiarism->algoProps as $props)
 
-                <div class="box-sm b-r flex items-center gap-2">
-                    <span>{{ $props->algoProp->name }}</span>
-                    <span>-></span>
-                    <span>{{ $props->value }}</span>
+                <div class="tooltip cursor-pointer" data-tip="{{ $props->algoProp->about }}">
+                    <div class="box-sm b-r flex items-center gap-2">
+                        <span>{{ $props->algoProp->name }}</span>
+                        <span>-></span>
+                        <span>{{ $props->value }}</span>
+                    </div>
                 </div>
 
             @endforeach
