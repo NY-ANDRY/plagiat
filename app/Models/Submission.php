@@ -50,6 +50,14 @@ class Submission extends Model
     }
 
     /**
+     * Get the fingerprints associated with this submission.
+     */
+    public function blooms(): HasMany
+    {
+        return $this->hasMany(Bloom::class);
+    }
+
+    /**
      * Get the plagiarism results where this submission was the first comparison target.
      */
     public function plagiarismResults1(): HasMany
@@ -89,9 +97,17 @@ class Submission extends Model
     {
         $raw_project = $this->rawProject;
         foreach ($fingerprints as $fingerprint) {
-           $fingerprint->raw_project_id = $raw_project->id;
+            $fingerprint->raw_project_id = $raw_project->id;
         }
         $this->fingerprints()->delete();
         $this->fingerprints()->saveMany($fingerprints);
+    }
+
+    public function setBloom(Bloom $bloom): void
+    {
+        $raw_project = $this->rawProject;
+        $bloom->raw_project_id = $raw_project->id;
+        $this->blooms()->delete();
+        $this->blooms()->save($bloom);
     }
 }

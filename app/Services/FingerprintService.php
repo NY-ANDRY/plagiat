@@ -37,15 +37,17 @@ class FingerprintService
     public function hash(string|array $text): string|array
     {
         if (\is_string($text)) {
-            return md5($text);
+            return hexdec(substr(md5($text), 0, 8));
+            // return crc32($text);
         }
 
         $result = [];
         foreach ($text as $value) {
-            if (! \is_string($value)) {
+            if (!\is_string($value)) {
                 throw new \Exception('only string or array of string accepted');
             }
-            $result[] = md5($value);
+            $result[] = hexdec(substr(md5($value), 0, 8));
+            // $result[] = crc32($value);
         }
 
         return $result;
@@ -87,6 +89,46 @@ class FingerprintService
                 'position' => $i,
             ]);
 
+        }
+
+        return $result;
+    }
+
+    // ////////
+
+    public function h1($string, $m)
+    {
+        $hash = 0;
+        $length = \strlen($string);
+
+        for ($i = 0; $i < $length; $i++) {
+            $hash = (($hash << 5) - $hash + \ord($string[$i])) % $m;
+        }
+
+        return $hash < 0 ? $hash + $m : $hash;
+    }
+
+    public function h2($string, $m)
+    {
+        $hash = 5381;
+        $length = \strlen($string);
+
+        for ($i = 0; $i < $length; $i++) {
+            $hash = ((($hash << 5) + $hash) ^ \ord($string[$i])) % $m;
+        }
+
+        return $hash < 0 ? $hash + $m : $hash;
+    }
+
+    public function getIndex($element, $arraySize, $hashCount)
+    {
+        $hash1 = $this->h1($element, $arraySize);
+        $hash2 = $this->h2($element, $arraySize);
+        $result = [];
+
+        for ($i = 0; $i < $hashCount; $i++) {
+            $index = ($hash1 + $i * $hash2) % $arraySize;
+            $result[] = abs($index);
         }
 
         return $result;

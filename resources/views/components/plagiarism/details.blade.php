@@ -17,10 +17,10 @@
         </div>
 
         <div class="flex h-full font-thin text-sm">
-            <form action="{{ route('plagiarism.delete', $plagiarism) }}" method="post" class="box-sm b-l activable-red h-full text-red-500">
+            <form action="{{ route('plagiarism.delete', $plagiarism) }}" method="post">
                 @csrf
                 @method('DELETE')
-                <input type="submit" value="delete" readonly />
+                <input type="submit" value="delete" readonly class="box-sm b-l activable-red h-full text-red-500" />
             </form>
         </div>
     </div>
@@ -47,8 +47,13 @@
                     </div>
                 </div>
 
-                <div class="box b-r flex w-48 items-center justify-center h-full">
-                    {{ $result->rate * 100 . "%" }}
+                <div class="box b-r flex w-48 items-center justify-between h-full gap-4">
+                    <div class="flex w-24 h-2 rounded-full bg-gray-100">
+                        <div class="flex h-full bg-black rounded-full" style="width: {{  $result->rate * 100 }}%;"></div>
+                    </div>
+                    <span class="text-end text-xs w-8">
+                        {{ $result->rate * 100 . "%" }}
+                    </span>
                 </div>
 
                 <a href="{{ route('plagiarism.view', $result) }}"
