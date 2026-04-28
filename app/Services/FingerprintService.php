@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Fingerprint;
+use Illuminate\Support\Facades\Log;
 
 class FingerprintService
 {
@@ -34,7 +35,7 @@ class FingerprintService
      *
      * @throws \Exception
      */
-    public function hash(string|array $text): string|array
+    public function hashMd5(string|array $text): string|array
     {
         if (\is_string($text)) {
             return hexdec(substr(md5($text), 0, 8));
@@ -51,6 +52,40 @@ class FingerprintService
         }
 
         return $result;
+    }
+
+    /**
+     * @param string[] $kgrams  tableau de strings de taille k
+     * @return int[]            liste des hash
+     */
+    public function hash(array $kgrams): array
+    {
+        $count = \count($kgrams);
+        if ($count <= 0) {
+            return [];
+        }
+        $base = 31;
+        $mod = 1_000_000_007; // standard
+
+        $k = \strlen($kgrams[0]);
+        $hashes = [];
+
+        foreach ($kgrams as $text) {
+            if (!\is_string($text) || \strlen($text) !== $k) {
+                Log::error("text: " . \strlen($text) . " k: " . $k);
+                throw new \Exception("Chaque élément doit être un string de meme taille");
+            }
+
+            $hash = 0;
+
+            for ($i = 0; $i < $k; $i++) {
+                $hash = ($hash * $base + \ord($text[$i])) % $mod;
+            }
+
+            $hashes[] = $hash;
+        }
+
+        return $hashes;
     }
 
     /**
