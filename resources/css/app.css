@@ -5,6 +5,39 @@
 @source "../**/*.js";
 @source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
 
+body {
+    @apply text-neutral-800;
+    font-family: "inter";
+}
+
+@font-face {
+  font-family: "instrument-sans";
+  src: url("../assets/fonts/InstrumentSans.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "inter";
+  src: url("../assets/fonts/Inter.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "lilex";
+  src: url("../assets/fonts/Lilex.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+h1 {
+    font-family: 'instrument-sans';
+}
+
+.mono {
+    font-family: "lilex"
+}
 
 button {
     @apply btn btn-sm btn-neutral cursor-pointer rounded-none shadow-none w-full;
@@ -40,6 +73,7 @@ details a {
 }
 
 input[type="text"],
+input[type="email"],
 input[type="password"],
 input[type="file"],
 input[type="date"]  {
