@@ -68,7 +68,7 @@
                                     class="relative lilex flex items-center justify-between rounded-sm gap-3 px-4 py-3 w-152 h-16 text-sm bg-neutral-800 text-neutral-100">
                                     <div class="flex items-center gap-3">
                                         <span style="user-select:none;-webkit-user-select:none;">$</span>
-                                        <code id="github_link"> git clone https://github.com/NY-ANDRY/plagiat</code>
+                                        <code id="github_link">git clone https://github.com/NY-ANDRY/plagiat</code>
                                     </div>
 
                                     <div class="flex items-center gap-3">
