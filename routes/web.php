@@ -38,11 +38,3 @@ Route::prefix('submission')->group(function () {
 Route::prefix('plagiarism')->group(function () {
     require __DIR__ . '/plagiarism.php';
 });
-
-// /// test
-
-use App\Http\Controllers\ZipController;
-
-Route::get('/zip/tree/{zip}', [ZipController::class, 'tree'])->where('zip', '.+');
-Route::get('/zip/file/{zip}', [ZipController::class, 'file'])->where('zip', '.+');
-Route::get('/zip/view', [ZipController::class, 'view']);
