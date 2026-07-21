@@ -8,7 +8,7 @@ use App\Models\PlagiarismAlgoProp;
 use App\Models\Submission;
 use Illuminate\Support\Facades\Log;
 
-class JaccardService
+class JaccardService extends AbstractPlagiarismComparator
 {
     private FingerprintService $fingerprintService;
 

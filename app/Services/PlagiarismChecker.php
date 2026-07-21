@@ -8,36 +8,44 @@ class PlagiarismChecker
 {
     private CleaningService $cleaningService;
 
-    private WinnowingService $winnowingService;
-
-    private JaccardService $jaccardService;
+    private AbstractPlagiarismComparator $plagiarismComparator;
 
     public function __construct()
     {
         $this->cleaningService = new CleaningService;
-        $this->winnowingService = new WinnowingService;
-        $this->jaccardService = new JaccardService;
     }
 
     public function check(Plagiarism $plagiarism): Plagiarism
     {
         $this->clean($plagiarism);
+
+        $this->setComparator($plagiarism);
+
+        if ($this->plagiarismComparator != null) {
+            $this->plagiarismComparator->process($plagiarism);
+        } else {
+            throw new \Exception('Comparator must be set');
+        }
+
+        return $plagiarism;
+    }
+
+    private function setComparator(Plagiarism $plagiarism): void
+    {
         $algo = $plagiarism->algo;
 
         switch (strtoupper($algo->name)) {
             case 'WINNOWING':
-                $plagiarism = $this->winnowingService->process($plagiarism);
+                $this->plagiarismComparator = new WinnowingService;
                 break;
 
             case 'JACCARD':
-                $plagiarism = $this->jaccardService->process($plagiarism);
+                $this->plagiarismComparator = new JaccardService;
                 break;
 
             default:
                 throw new \Exception('Unknown algorithm');
         }
-
-        return $plagiarism;
     }
 
     public function clean(Plagiarism $plagiarism): void
