@@ -6,7 +6,7 @@ use App\Models\Plagiarism;
 use App\Models\PlagiarismAlgoProp;
 use App\Models\Submission;
 
-class WinnowingService
+class WinnowingService extends AbstractPlagiarismComparator
 {
     private FingerprintService $fingerprintService;
 
